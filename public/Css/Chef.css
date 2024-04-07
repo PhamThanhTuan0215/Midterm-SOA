@@ -1,0 +1,231 @@
+body {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff;
+    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    color: #007bff;
+    text-align: center;
+}
+
+#list-order,
+#detail-order {
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 600px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    float: left;
+    width: 100%;
+}
+
+#list-order {
+    margin-right: 20px;
+}
+
+#list-order tr:hover {
+    background-color: #e0e0e0;
+}
+
+#detail-order table,
+#list-order table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#detail-order th,
+#list-order th,
+#detail-order td,
+#list-order td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#detail-order th,
+#list-order th {
+    background-color: #f2f2f2;
+}
+
+#detail-order .completed-icon,
+#list-order .waiting-icon {
+    color: green;
+}
+
+#list-order .waiting-icon {
+    color: red;
+}
+
+.view-detail {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.view-detail:hover {
+    background-color: #0056b3;
+}
+
+.view-detail:focus {
+    outline: none;
+}
+
+.view-detail:focus-visible {
+    outline: 2px solid #0056b3;
+}
+
+.completed-icon,
+.waiting-icon {
+    font-size: 20px;
+}
+
+@media screen and (min-width: 1000px) {
+    .container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    #list-order, #detail-order {
+        width: 48%;
+    }
+}
+
+#btnManageFoods {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #244ed5;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin: 10px;
+}
+
+#btnManageFoods:hover {
+    background-color: #b1294b;
+}
+
+#btnLogout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0eac0e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#btnLogout:hover {
+    background-color: #04670c;
+}
+
+.w3-container {
+    height: 630px;
+    overflow-y: auto;
+}
+
+.close {
+    font-size: 40px;
+    font-weight: bold;
+}
+
+#inventoryModal table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ddd; /* Viền xám nhạt cho bảng */
+}
+
+#inventoryModal th {
+    background-color: #f2f2f2;
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#inventoryModal td {
+    padding: 8px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#inventoryModal img {
+    width: 50px;
+    height: auto;
+}
+
+#inventoryModal .btnOn {
+    color: white;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: rgb(9, 194, 9);
+    border-radius: 5px;
+}
+
+#inventoryModal .btnOff {
+    color: white;
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color: rgb(234, 46, 46);
+    border-radius: 5px;
+}
+
+#inventoryModal .btnOn:hover {
+    background-color: green;
+}
+
+#inventoryModal .btnOff:hover {
+    background-color: red;
+}
+
+#inventoryModal tr:hover {
+    background-color: #e0e0e0;
+}
+
+#btnComplete {
+    padding: 10px;
+    background-color: #0eac0e;
+    color: white;
+    border-radius: 8px;
+}
+
+#btnComplete:hover {
+    background-color: green;
+}
+
+.checked {
+    color: inherit;
+}
+
+.new {
+    color: red;
+}

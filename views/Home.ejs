@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Page</title>
+  <link rel="stylesheet" href="/Css/Home.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Please select user type</h1>
+    <div class="buttons">
+      <button id="chefButton">Chef</button>
+      <button id="staffButton">Staff / Manager</button>
+      <button id="customerButton">Customer</button>
+    </div>
+
+    <div id="chefModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeChefModal">&times;</span>
+        <h2>Chef information</h2>
+        <form id="chefForm" method="post" action="/chef">
+          <input type="text" id="chefEmail" name="email" placeholder="Email" required>
+          <input type="password" id="chefPassword" name="password" placeholder="Password" required>
+          <div class="errMessage" id="errMessageChef">Error message</div>
+          <button type="submit" id="chefSubmitButton">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="staffModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeStaffModal">&times;</span>
+        <h2>Staff/Manager information</h2>
+        <form id="staffForm" method="post" action="/staff-manager">
+          <input type="text" id="staffEmail" name="email" placeholder="Email" required>
+          <input type="password" id="staffPassword" name="password" placeholder="Password" required>
+          <div class="errMessage" id="errMessageStaff">Error message</div>
+          <button type="submit" id="staffSubmitButton">Submit</button>
+        </form>
+      </div>
+    </div>
+    
+    <div id="customerModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeCustomerModal">&times;</span>
+        <h2>Customer information</h2>
+        <form id="customerForm" method="post" action="/customer">
+          <input type="text" id="customerName" name="customer" placeholder="Name" required>
+          <input type="text" id="tableCode" name="table_code" placeholder="Table Code" required>
+          <div class="errMessage" id="errMessageCustomer">Error message</div>
+          <button type="submit" id="customerSubmitButton">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/Style/Home.js"></script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) repeat(8, minmax(0, 1fr)) minmax(0, 1fr);
+    grid-gap: 20px;
+}
+
+#navigation {
+    grid-column: span 2;
+    background-color: #f2f2f2;
+    padding: 25px;
+}
+
+#main {
+    grid-column: span 8;
+    background-color: #e0e0e0;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#menu {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: black;
+    border-radius: 10px;
+}
+
+#menu button {
+    margin: 10px;
+    padding: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    margin-left: 0px;
+}
+
+#menu button:hover {
+    background-color: greenyellow;
+    color: rgb(136, 57, 193);
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.content {
+    display: none;
+}
+
+h1 {
+    text-align: center;
+    font-size: 30px;
+    color: rgb(45, 45, 235);
+}
+
+.grid-view {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 10px;
+}
+
+.grid-item {
+    background-color: #f2f2f2;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.grid-item.occupied {
+    background-color: red;
+}
+
+.grid-item.unoccupied:hover {
+    background-color: darkgrey;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    width: 40%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#btnOpen {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#btnOpen:hover {
+    background-color: #45a049;
+}
+
+.modal::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+#paymentContent {
+    display: none;
+}
+
+#paymentContent h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input[type="text"],
+.input-group input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#btnSearchOrder {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#btnSearchOrder:hover {
+    background-color: #0056b3;
+}
+
+#searchResultOrder {
+    display: none;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+#informationOrder,
+#detailOrder {
+    width: calc(50% - 10px);
+}
+
+#informationOrder {
+    background-color: rgb(199, 225, 224);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#detailOrder {
+    background-color: rgb(142, 240, 237);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+#informationOrder h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#informationOrder p {
+    margin-bottom: 5px;
+}
+
+#informationOrder button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#informationOrder button:hover {
+    background-color: #0056b3;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.completed-icon {
+    color: green;
+}
+
+.fa-check-circle {
+    font-size: 18px;
+}
+
+.completed-icon,
+.fa-check-circle {
+    color: green;
+}
+
+#btnConfirmPayment {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#btnConfirmPayment:hover {
+    background-color: #0056b3;
+}
+
+.errMessage{
+    display: none;
+    color: red;
+}
+
+#btnLogout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0eac0e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#btnLogout:hover {
+    background-color: #04670c;
+}

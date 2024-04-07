@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef page</title>
+    <link rel="stylesheet" href="/Css/Chef.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div id="list-order">
+            <h2 id="title-list-order"> List Orders </h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Table Code</th>
+                        <th>Status complete</th>
+                        <th>Status check</th>
+                        <th>Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td>Quoc Kien</td>
+                        <td>5</td>
+                        <td>Not yet</td>
+                        <td>New</td>
+                        <td>
+                            <Button data-orderId="1" class="view-detail">View</Button>
+                        </td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="detail-order">
+            <h2 id="title-detail-order"> Details of Order </h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Note</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td>Pizza</td>
+                        <td>1</td>
+                        <td></td>
+                        <td><i class="completed-icon fas fa-check-circle"></i></td>
+                    </tr> -->
+                </tbody>
+            </table>
+
+            <div id="information-order">
+                <!-- <div>
+                    <p>Customer: <strong>Quoc Kien</strong></p>
+                    <p>Table Code: <strong>5</strong></p>
+                    <p>Status: <strong>Not yet</strong></p>
+                </div>
+    
+                <button id="btnComplete">Complete</button> -->
+            </div>
+        </div>
+
+        <div>
+            <button id="btnManageFoods">Foods Management</button>
+        </div>
+
+        <div>
+            <form action="/chef/logout" method="get">
+                <button type="submit" id="btnLogout">Logout</button>
+            </form>
+        </div>
+
+          <div id="inventoryModal" class="w3-modal">
+            <div class="w3-modal-content">
+                <div class="w3-container">
+                    <span onclick="document.getElementById('inventoryModal').style.display='none'"
+                        class="w3-button w3-display-topright close">&times;</span>
+                        <h2>Food Management</h2>
+                        <table>
+                          <thead>
+                              <tr>
+                                  <th>Image</th>
+                                  <th>Name</th>
+                                  <th>Category</th>
+                                  <th>Warehouse status</th>
+                                  <th>Status</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <!-- <tr>
+                                  <td><img src="/Image/Foods/Pizza.png" alt=""></td>
+                                  <td>Pizza</td>
+                                  <td>Main food</td>
+                                  <td>Out of stock</td>
+                                  <td><button data-foodId="1" class="btnOff">Off</button></td>
+                              </tr>
+                              <tr>
+                                    <td><img src="/Image/Foods/Coca.png" alt=""></td>
+                                  <td>Coca</td>
+                                  <td>Drinks</td>
+                                  <td>In stock</td>
+                                  <td><button data-foodId="2" class="btnOn">On</button></td>
+                              </tr> -->
+                          </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/Style/Chef.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer page</title>
+    <link rel="stylesheet" href="/Css/Customer.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="customerData" data-customer="<%= customer %>" data-table_code="<%= table_code %>"
+        data-orderId="<%= orderId %>"></div>
+
+    <div class="container">
+
+        <div class="navigation">
+
+            <div id="menu">
+
+                <button id="btnMainFood">
+                    Main Food
+                </button>
+
+                <button id="btnDrinks">
+                    Drinks
+                </button>
+
+                <button id="btnExtraFood">
+                    Extra Food
+                </button>
+
+            </div>
+
+        </div>
+
+        <div id="main">
+
+            <h2 id="title-food"> Main Food </h2>
+
+            <div class="items">
+                <!-- <div class="item" data-name="1">
+                    <div>
+                        <img src="/Apple.jpg" alt="">
+                    </div>
+                    <h3>item 1</h3>
+                    <div class="price">$20.99</div>
+                </div> -->
+            </div>
+
+        </div>
+
+        <div id="select">
+
+            <div id="ordered">
+                <h1>Ordered Food</h1>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Note</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td>Item 1</td>
+                            <td>2</td>
+                            <td>$30.00</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+
+                <div id="totalPrice">
+                    total price: <strong>$0.00</strong>
+                </div>
+            </div>
+
+            <div id="selecting">
+                <h1>Selecting Food</h1>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td>Item 1</td>
+                            <td>2</td>
+                            <td>$30.00</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+
+                <button id="order">Order</button>
+
+            </div>
+        </div>
+
+        <div id="confirmModal" class="w3-modal">
+            <div class="w3-modal-content">
+                <div class="w3-container">
+                    <span onclick="document.getElementById('confirmModal').style.display='none'"
+                        class="w3-button w3-display-topright">&times;</span>
+                    <p>Would you like to order?</p>
+                    <button id="btnConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="/Style/Customer.js"></script>
+</body>
+
+</html>

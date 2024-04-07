@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff/Manager page</title>
+    <link rel="stylesheet" href="/Css/Staff_Manager.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="employeeData" data-employeeId="<%= employee.employeeId %>"></div>
+
+    <div class="container">
+
+        <div id="navigation">
+
+            <div id="menu">
+
+                <button id="btnNewOrder">
+                    New Order
+                </button>
+
+                <button id="btnPayment">
+                    Payment
+                </button>
+
+                <% if(employee.role == "manager") { %>
+                    <button id="btnCurrentShift">
+                        Bills Current Shift
+                    </button>
+    
+                    <button id="btnHistory">
+                        History
+                    </button>
+                <% } %>
+
+            </div>
+
+        </div>
+
+        <div id="main">
+            <div id="newOrderContent" class="content">
+                <h1>New order</h1>
+                <div id="grid-container" class="grid-view">
+                    <!-- <div class="grid-item" data-table_code="1">1</div>
+                    <div class="grid-item" data-table_code="2">2</div> -->
+                </div>
+            
+                <div id="openTableModal" class="modal">
+                    <div class="modal-content">
+                        <span id="closeOpenTableModal" class="close">&times;</span>
+                        <h2>Enter Customer Information</h2>
+                        <div>
+                            <label for="table_code">Table Code:</label>
+                            <input type="number" id="table_code" placeholder="Enter table code" readonly>
+                        </div>
+                        <div>
+                            <label for="customer">Customer Name:</label>
+                            <input type="text" id="customer" placeholder="Enter customer name">
+                        </div>
+                        <div>
+                            <label for="customer_number">Number of Customers:</label>
+                            <input type="number" id="customer_number" placeholder="Enter number of customers">
+                        </div>
+                        <button id="btnOpen">Open Table</button>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div id="paymentContent" class="content">
+                <h1>Payment</h1>
+                <div class="input-group">
+                    <label for="table_code_2">Table Code:</label>
+                    <input type="number" id="table_code_2" placeholder="Enter table code">
+                </div>
+                <div class="input-group">
+                    <label for="customer_2">Customer Name:</label>
+                    <input type="text" id="customer_2" placeholder="Enter customer name">
+                </div>
+                <button id="btnSearchOrder">Search Order</button>
+                <div id="searchResultOrder">
+                    <div id="informationOrder">
+                        <!-- <h2>Information of order</h2>
+                        <p>Customer: <strong>Hai Nam</strong></p>
+                        <p>Table Code: <strong>6</strong></p>
+                        <p>Status complete: <strong>Completed</strong></p>
+                        <p>Status payment: <strong>Not yet</strong></p>
+                        <p>Total price: <strong>$8.49</strong></p>
+                        <button id="btnPay">Pay</button> -->
+                    </div>
+
+                    <div id="detailOrder">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Pizza</td>
+                                    <td>1</td>
+                                    <td>$4.00</td>
+                                    <td><i class="completed-icon fas fa-check-circle"></i></td>
+                                </tr>
+                                <tr>
+                                    <td>Pizza</td>
+                                    <td>1</td>
+                                    <td>$4.00</td>
+                                    <td><i class="completed-icon fas fa-check-circle"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="paymentModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" id="closePaymentModal">&times;</span>
+                        <h2>Payment</h2>
+                        <div class="input-group">
+                            <label for="employeeId">Employee ID:</label>
+                            <input type="text" id="employeeId" placeholder="Enter employee ID">
+                        </div>
+                        <div class="input-group">
+                            <label for="received">Amount Paid:</label>
+                            <input type="number" id="received" placeholder="Enter amount received">
+                        </div>
+                        <div class="errMessage" id="errMessagePayment">Error message</div>
+                        <button id="btnConfirmPayment">Confirm</button>
+                    </div>
+                </div>
+            </div>
+
+            <% if(employee.role == 'manager') { %>
+                <div id="currentShiftContent" class="content">
+                    <h1>Current shift</h1>
+                </div>
+                
+                <div id="historyContent" class="content">
+                    <h1>History</h1>
+                </div>
+            <% } %>
+        </div>
+
+        <div>
+            <form action="/staff-manager/logout" method="get">
+                <button type="submit" id="btnLogout">Logout</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="/Style/Staff_Manager.js"></script>
+</body>
+
+</html>
