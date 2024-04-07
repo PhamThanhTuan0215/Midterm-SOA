@@ -153,7 +153,7 @@ module.exports.payment = async (req, res) => {
                 let newBill = new Bill({
                     employeeId: employeeId,
                     customer: order.customer,
-                    table_code: order.table_number,
+                    table_code: order.table_code,
                     orderId: orderId,
                     total_price: order.total_price,
                     received: receivedAmount,

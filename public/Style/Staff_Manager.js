@@ -20,6 +20,8 @@ btnPayment.addEventListener('click', function() {
 
 btnCurrentShift.addEventListener('click', function() {
     showContent(currentShiftContent);
+
+    getBillsCurrentShift()
 });
 
 btnHistory.addEventListener('click', function() {
@@ -295,4 +297,63 @@ function payment(employeeId, orderId, received) {
       .catch(error => {
         console.error('There was a problem with your fetch operation:', error);
       });
+}
+
+// current shift
+function getBillsCurrentShift() {
+    const shift = getCurrentShift()
+
+    const url = 'http://localhost:8888/staff-manager/bills-shift?shift=' + shift
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                displayBillsCurrentShift(json.listBill)
+            }
+            else {
+                console.log(json.message)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function getCurrentShift() {
+    const date = new Date();
+    const currentHour = date.getHours
+
+    if (currentHour >= 6 && currentHour < 12) {
+        return 1;
+    } else if (currentHour >= 12 && currentHour < 18) {
+        return 2;
+    } else {
+        return 3;
+    }
+}
+
+function displayBillsCurrentShift(listBill) {
+    const currentShiftTableBody = document.querySelector('#currentShiftContent tbody');
+    currentShiftTableBody.innerHTML = '';
+
+    listBill.forEach(bill => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${bill.employeeId}</td>
+            <td>${bill.customer}</td>
+            <td>${bill.table_code}</td>
+            <td>$${bill.total_price.toFixed(2)}</td>
+            <td>$${bill.received.toFixed(2)}</td>
+            <td>$${bill.refund.toFixed(2)}</td>
+            <td>${bill.date}</td>
+            <td>${bill.shift}</td>
+            <td><button class="view-detail" data-billId="${bill._id}">View</button></td>
+        `;
+        currentShiftTableBody.appendChild(newRow);
+    });
 }

@@ -284,3 +284,66 @@ table td {
 #btnLogout:hover {
     background-color: #04670c;
 }
+
+#currentShiftContent {
+    flex: 1;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 600px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+    float: left;
+    width: 100%;
+}
+
+#currentShiftContent {
+    margin-right: 20px;
+}
+
+#currentShiftContent tr:hover {
+    background-color: #e0e0e0;
+}
+
+#currentShiftContent table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#currentShiftContent th,
+#currentShiftContent td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+#currentShiftContent th {
+    background-color: #f2f2f2;
+}
+
+.view-detail {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.view-detail:hover {
+    background-color: #0056b3;
+}
+
+.view-detail:focus {
+    outline: none;
+}
+
+.view-detail:focus-visible {
+    outline: 2px solid #0056b3;
+}
