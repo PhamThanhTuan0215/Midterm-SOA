@@ -78,7 +78,7 @@ module.exports.add_new_order = (req, res) => {
     }
 
     let order = new Order({
-        customer, customers_number, table_code
+        employeeId: req.session.employee.employeeId, customer, customers_number, table_code
     })
 
     order.save()

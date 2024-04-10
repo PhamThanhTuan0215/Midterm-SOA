@@ -29,15 +29,15 @@
                     Payment
                 </button>
 
-                <% if(employee.role == "manager") { %>
+                <% if(employee.role=="manager" ) { %>
                     <button id="btnCurrentShift">
                         Bills Current Shift
                     </button>
-    
+
                     <button id="btnHistory">
                         History
                     </button>
-                <% } %>
+                    <% } %>
 
             </div>
 
@@ -50,7 +50,7 @@
                     <!-- <div class="grid-item" data-table_code="1">1</div>
                     <div class="grid-item" data-table_code="2">2</div> -->
                 </div>
-            
+
                 <div id="openTableModal" class="modal">
                     <div class="modal-content">
                         <span id="closeOpenTableModal" class="close">&times;</span>
@@ -70,9 +70,9 @@
                         <button id="btnOpen">Open Table</button>
                     </div>
                 </div>
-                
+
             </div>
-            
+
             <div id="paymentContent" class="content">
                 <h1>Payment</h1>
                 <div class="input-group">
@@ -141,43 +141,43 @@
                 </div>
             </div>
 
-            <% if(employee.role == 'manager') { %>
-                <div id="currentShiftContent" class="content">
-                    <h1>Current shift</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Employee Id</th>
-                                <th>Customer</th>
-                                <th>Table Code</th>
-                                <th>Total Price</th>
-                                <th>Received</th>
-                                <th>Refund</th>
-                                <th>Date</th>
-                                <th>Shift</th>
-                                <th>Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>S001</td>
-                                <td>Thanh Tam</td>
-                                <td>4</td>
-                                <td>$43.99</td>
-                                <td>$50.00</td>
-                                <td>$6.07</td>
-                                <td>03/31/2024</td>
-                                <td>3</td>
-                                <td><button class="view-detail">View</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="historyContent" class="content">
-                    <h1>History</h1>
-                </div>
-            <% } %>
+
+            <div id="currentShiftContent" class="content">
+                <h1>Current shift</h1>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee Id</th>
+                            <th>Customer</th>
+                            <th>Table Code</th>
+                            <th>Total Price</th>
+                            <th>Received</th>
+                            <th>Refund</th>
+                            <th>Date</th>
+                            <th>Shift</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>S001</td>
+                            <td>Thanh Tam</td>
+                            <td>4</td>
+                            <td>$43.99</td>
+                            <td>$50.00</td>
+                            <td>$6.07</td>
+                            <td>03/31/2024</td>
+                            <td>3</td>
+                            <td><button class="view-detail">View</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="historyContent" class="content">
+                <h1>History</h1>
+            </div>
+
         </div>
 
         <div>

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const OrderSchema = new Schema({
+    employeeId: String,
     customer: String,
     customers_number: Number,
     table_code: Number,

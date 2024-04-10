@@ -8,25 +8,33 @@ const paymentContent = document.getElementById('paymentContent');
 const currentShiftContent = document.getElementById('currentShiftContent');
 const historyContent = document.getElementById('historyContent');
 
-btnNewOrder.addEventListener('click', function() {
-    showContent(newOrderContent);
+if(btnNewOrder) {
+    btnNewOrder.addEventListener('click', function() {
+        showContent(newOrderContent);
+    
+        getOccupiedTables()
+    });
+}
 
-    getOccupiedTables()
-});
+if(btnPayment) {
+    btnPayment.addEventListener('click', function() {
+        showContent(paymentContent);
+    });
+}
 
-btnPayment.addEventListener('click', function() {
-    showContent(paymentContent);
-});
+if(btnCurrentShift) {
+    btnCurrentShift.addEventListener('click', function() {
+        showContent(currentShiftContent);
+    
+        getBillsCurrentShift()
+    });
+}
 
-btnCurrentShift.addEventListener('click', function() {
-    showContent(currentShiftContent);
-
-    getBillsCurrentShift()
-});
-
-btnHistory.addEventListener('click', function() {
-    showContent(historyContent);
-});
+if(btnHistory) {
+    btnHistory.addEventListener('click', function() {
+        showContent(historyContent);
+    });
+}
 
 function showContent(contentElement) {
     const contents = document.querySelectorAll('.content');
