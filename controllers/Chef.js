@@ -98,7 +98,7 @@ module.exports.get_all_orders = (req, res) => {
 
     Order.aggregate([
         {
-            $sort: { status_completed: 1 }
+            $sort: { status_check: 1, status_completed: 1 }
         }
     ])
         .then(listOrder => {

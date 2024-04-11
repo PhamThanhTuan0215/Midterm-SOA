@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/customer', require('./routers/Customer'))
-app.use('/staff-manager', require('./routers/Staff_Manager'))
+app.use('/waiter-manager', require('./routers/Waiter_Manager'))
 app.use('/chef', require('./routers/Chef'))
 
 app.use((req, res) => {

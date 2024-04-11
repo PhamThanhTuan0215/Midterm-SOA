@@ -11,7 +11,7 @@
     <h1>Please select user type</h1>
     <div class="buttons">
       <button id="chefButton">Chef</button>
-      <button id="staffButton">Staff / Manager</button>
+      <button id="waiterButton">Waiter / Manager</button>
       <button id="customerButton">Customer</button>
     </div>
 
@@ -28,15 +28,15 @@
       </div>
     </div>
 
-    <div id="staffModal" class="modal">
+    <div id="waiterModal" class="modal">
       <div class="modal-content">
-        <span class="close" id="closeStaffModal">&times;</span>
-        <h2>Staff/Manager information</h2>
-        <form id="staffForm" method="post" action="/staff-manager">
-          <input type="text" id="staffEmail" name="email" placeholder="Email" required>
-          <input type="password" id="staffPassword" name="password" placeholder="Password" required>
-          <div class="errMessage" id="errMessageStaff">Error message</div>
-          <button type="submit" id="staffSubmitButton">Submit</button>
+        <span class="close" id="closeWaiterModal">&times;</span>
+        <h2>Waiter/Manager information</h2>
+        <form id="waiterForm" method="post" action="/waiter-manager">
+          <input type="text" id="waiterEmail" name="email" placeholder="Email" required>
+          <input type="password" id="waiterPassword" name="password" placeholder="Password" required>
+          <div class="errMessage" id="errMessageWaiter">Error message</div>
+          <button type="submit" id="waiterSubmitButton">Submit</button>
         </form>
       </div>
     </div>

@@ -2,11 +2,13 @@ const btnNewOrder = document.getElementById('btnNewOrder');
 const btnPayment = document.getElementById('btnPayment');
 const btnCurrentShift = document.getElementById('btnCurrentShift');
 const btnHistory = document.getElementById('btnHistory');
+const btnAccountManage = document.getElementById('btnAccountManage');
 
 const newOrderContent = document.getElementById('newOrderContent');
 const paymentContent = document.getElementById('paymentContent');
 const currentShiftContent = document.getElementById('currentShiftContent');
 const historyContent = document.getElementById('historyContent');
+const accountManageContent = document.getElementById('accountManageContent');
 
 if(btnNewOrder) {
     btnNewOrder.addEventListener('click', function() {
@@ -33,6 +35,19 @@ if(btnCurrentShift) {
 if(btnHistory) {
     btnHistory.addEventListener('click', function() {
         showContent(historyContent);
+
+        let startDate = new Date()
+        let endDate = new Date()
+        startDate = formatDateString(startDate)
+        endDate = formatDateString(endDate)
+
+        getBills(startDate, endDate)
+    });
+}
+
+if(btnAccountManage) {
+    btnAccountManage.addEventListener('click', function() {
+        showContent(accountManageContent);
     });
 }
 
@@ -47,7 +62,7 @@ function showContent(contentElement) {
 
 // new order
 function getOccupiedTables() {
-    const url = 'http://localhost:8888/staff-manager/occupied-tables'
+    const url = 'http://localhost:8888/waiter-manager/occupied-tables'
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -120,7 +135,7 @@ btnOpen.addEventListener('click', function() {
 });
 
 function openTable(customer, customers_number, table_code) {
-    const url = 'http://localhost:8888/staff-manager/new-order'
+    const url = 'http://localhost:8888/waiter-manager/new-order'
     const data = {
         customer: customer,
         customers_number: customers_number,
@@ -167,7 +182,7 @@ btnSearchOrder.addEventListener('click', function() {
 });
 
 function searchOrder(customer, table_code) {
-    const url = 'http://localhost:8888/staff-manager/search-order?customer=' + customer +'&table_code=' + table_code
+    const url = 'http://localhost:8888/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -269,7 +284,7 @@ btnConfirmPayment.addEventListener('click', function() {
 
 
 function payment(employeeId, orderId, received) {
-    const url = 'http://localhost:8888/staff-manager/payment'
+    const url = 'http://localhost:8888/waiter-manager/payment'
     const data = {
         employeeId: employeeId,
         orderId: orderId,
@@ -308,10 +323,13 @@ function payment(employeeId, orderId, received) {
 }
 
 // current shift
+const detailBillModal = document.getElementById('detailBillModal');
+const closeDetailBillModal = document.getElementById('closeDetailBillModal');
+
 function getBillsCurrentShift() {
     const shift = getCurrentShift()
 
-    const url = 'http://localhost:8888/staff-manager/bills-shift?shift=' + shift
+    const url = 'http://localhost:8888/waiter-manager/bills-shift?shift=' + shift
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -334,7 +352,7 @@ function getBillsCurrentShift() {
 
 function getCurrentShift() {
     const date = new Date();
-    const currentHour = date.getHours
+    const currentHour = date.getHours()
 
     if (currentHour >= 6 && currentHour < 12) {
         return 1;
@@ -364,4 +382,194 @@ function displayBillsCurrentShift(listBill) {
         `;
         currentShiftTableBody.appendChild(newRow);
     });
+
+    addClickEventsForViewBtn()
+}
+
+closeDetailBillModal.addEventListener('click', function() {
+    detailBillModal.style.display = 'none';
+});
+
+function addClickEventsForViewBtn() {
+    const viewButtons = document.querySelectorAll('.view-detail');
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const billId = button.getAttribute('data-billId');
+            getDetailBill(billId)
+        });
+    });
+}
+
+function getDetailBill(billId) {
+    const url = 'http://localhost:8888/waiter-manager/detail-bill?billId=' + billId
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                const bill = json.bill
+                const listFood = json.listFood
+
+                displayDetailBill(bill, listFood)
+            }
+            else {
+                console.log(json.message)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function displayDetailBill(bill, listFood) {
+    document.getElementById('bill-employeeId').textContent = bill.employeeId;
+    document.getElementById('bill-customer').textContent = bill.customer;
+    document.getElementById('bill-tableCode').textContent = bill.table_code;
+    document.getElementById('bill-totalPrice').textContent = `$${bill.total_price.toFixed(2)}`;
+    document.getElementById('bill-received').textContent = `$${bill.received.toFixed(2)}`;
+    document.getElementById('bill-refund').textContent = `$${bill.refund.toFixed(2)}`;
+    document.getElementById('bill-date').textContent = bill.date;
+    document.getElementById('bill-shift').textContent = bill.shift;
+
+    const foodItemsTable = document.getElementById('foodItems');
+    foodItemsTable.innerHTML = '';
+
+    listFood.forEach(food => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${food.name}</td>
+            <td>${food.quantity}</td>
+            <td>$${food.totalPrice.toFixed(2)}</td>
+        `;
+        foodItemsTable.appendChild(newRow);
+    });
+
+    detailBillModal.style.display = 'block'
+}
+
+//history
+const searchFix = document.getElementById('searchFix');
+const searchFlex = document.getElementById('searchFlex');
+
+function formatDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
+
+function formatDateString(inputDateString) {
+    let dateObject = new Date(inputDateString);
+
+    let day = dateObject.getDate();
+    let month = dateObject.getMonth() + 1;
+    let year = dateObject.getFullYear();
+
+    //"MM/DD/YYYY"
+    let formattedDate = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
+
+    return formattedDate;
+}
+
+searchFix.addEventListener('click', function() {
+    const timeRange = document.getElementById('timeRange');
+    const valueTimeRange = timeRange.value
+
+    if(!valueTimeRange) {
+        return alert('Please select date')
+    }
+    
+    let startDate = new Date()
+    let endDate = new Date()
+
+    if(valueTimeRange === 'yesterday') {
+        startDate.setDate(startDate.getDate() - 1);
+        endDate.setDate(endDate.getDate() -1);
+
+        startDate = formatDateString(startDate)
+        endDate = formatDateString(endDate)
+    }
+    else {
+        endDate = formatDateString(endDate)
+        const [month, day, year] = endDate.split('/');
+
+        if(valueTimeRange === 'today') {
+            startDate = endDate
+        }
+        else if(valueTimeRange === 'thismonth') {
+            startDate = `${month}/01/${year}`
+        }
+        else if(valueTimeRange === 'thisyear') {
+            startDate = `01/01/${year}`
+        }
+    }
+
+    getBills(startDate, endDate)
+
+});
+
+searchFlex.addEventListener('click', function() {
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    if(!startDateInput.value) {
+        return alert('Please select date start')
+    }
+    else if(!endDateInput.value) {
+        return alert('Please select date end')
+    }
+
+    const startDate = formatDate(startDateInput.value)
+    const endDate = formatDate(endDateInput.value)
+
+    getBills(startDate, endDate)
+});
+
+function getBills(startDate, endDate) {
+
+    const url = 'http://localhost:8888/waiter-manager/bills-date?startDate=' + startDate + '&endDate=' + endDate
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                displayBills(json.listBill)
+            }
+            else {
+                console.log(json.message)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function displayBills(listBill) {
+    const tableBody = document.querySelector('#historyContent tbody');
+    tableBody.innerHTML = '';
+
+    listBill.forEach(bill => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${bill.employeeId}</td>
+            <td>${bill.customer}</td>
+            <td>${bill.table_code}</td>
+            <td>$${bill.total_price.toFixed(2)}</td>
+            <td>$${bill.received.toFixed(2)}</td>
+            <td>$${bill.refund.toFixed(2)}</td>
+            <td>${bill.date}</td>
+            <td>${bill.shift}</td>
+            <td><button class="view-detail" data-billId="${bill._id}">View</button></td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+
+    addClickEventsForViewBtn()
 }

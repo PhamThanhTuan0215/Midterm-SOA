@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Staff/Manager page</title>
-    <link rel="stylesheet" href="/Css/Staff_Manager.css">
+    <title>Waiter/Manager page</title>
+    <link rel="stylesheet" href="/Css/Waiter_Manager.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
@@ -36,6 +36,10 @@
 
                     <button id="btnHistory">
                         History
+                    </button>
+
+                    <button id="btnAccountManage">
+                        Account Manage
                     </button>
                     <% } %>
 
@@ -141,7 +145,6 @@
                 </div>
             </div>
 
-
             <div id="currentShiftContent" class="content">
                 <h1>Current shift</h1>
                 <table>
@@ -176,19 +179,104 @@
 
             <div id="historyContent" class="content">
                 <h1>History</h1>
+
+                <label for="timeRange">Select Date:</label>
+                <select id="timeRange">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="thismonth">This Month</option>
+                    <option value="thisyear">This Year</option>
+                </select>
+
+                
+                <button id="searchFix" >Search</button>
+
+                <div id="customTimeRange">
+                    <label for="startDate">From Date:</label>
+                    <input type="date" id="startDate">
+            
+                    <label for="endDate">To Date:</label>
+                    <input type="date" id="endDate">
+
+                    <button id="searchFlex" >Search</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Employee Id</th>
+                            <th>Customer</th>
+                            <th>Table Code</th>
+                            <th>Total Price</th>
+                            <th>Received</th>
+                            <th>Refund</th>
+                            <th>Date</th>
+                            <th>Shift</th>
+                            <th>Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td>S001</td>
+                            <td>Thanh Tam</td>
+                            <td>4</td>
+                            <td>$43.99</td>
+                            <td>$50.00</td>
+                            <td>$6.07</td>
+                            <td>03/31/2024</td>
+                            <td>3</td>
+                            <td><button class="view-detail">View</button></td>
+                        </tr> -->
+                    </tbody>
+                </table>
             </div>
 
+            <div id="detailBillModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="closeDetailBillModal">&times;</span>
+                    <h2>Detail Bill</h2>
+                    <div id="billInformation">
+                        <!-- Thông tin hóa đơn -->
+                        <p><strong>Employee ID:</strong> <span id="bill-employeeId"></span></p>
+                        <p><strong>Customer:</strong> <span id="bill-customer"></span></p>
+                        <p><strong>Table Code:</strong> <span id="bill-tableCode"></span></p>
+                        <p><strong>Total Price:</strong> <span id="bill-totalPrice"></span></p>
+                        <p><strong>Received:</strong> <span id="bill-received"></span></p>
+                        <p><strong>Refund:</strong> <span id="bill-refund"></span></p>
+                        <p><strong>Date:</strong> <span id="bill-date"></span></p>
+                        <p><strong>Shift:</strong> <span id="bill-shift"></span></p>
+                    </div>
+                    <div id="foodItemsTable">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody id="foodItems">
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="accountManageContent" class="content">
+                <h1>Account Manage</h1>
+            </div>
         </div>
 
         <div>
-            <form action="/staff-manager/logout" method="get">
+            <form action="/waiter-manager/logout" method="get">
                 <button type="submit" id="btnLogout">Logout</button>
             </form>
         </div>
 
     </div>
 
-    <script src="/Style/Staff_Manager.js"></script>
+    <script src="/Style/Waiter_Manager.js"></script>
 </body>
 
 </html>

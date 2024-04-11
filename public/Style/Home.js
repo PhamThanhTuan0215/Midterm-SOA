@@ -1,21 +1,21 @@
 const chefModal = document.getElementById('chefModal');
-const staffModal = document.getElementById('staffModal');
+const waiterModal = document.getElementById('waiterModal');
 const customerModal = document.getElementById('customerModal');
 
 const chefButton = document.getElementById('chefButton');
-const staffButton = document.getElementById('staffButton');
+const waiterButton = document.getElementById('waiterButton');
 const customerButton = document.getElementById('customerButton');
 
 const closeChefModal = document.getElementById('closeChefModal');
-const closeStaffModal = document.getElementById('closeStaffModal');
+const closeWaiterModal = document.getElementById('closeWaiterModal');
 const closeCustomerModal = document.getElementById('closeCustomerModal');
 
 chefButton.onclick = function () {
   chefModal.style.display = 'block';
 }
 
-staffButton.onclick = function () {
-  staffModal.style.display = 'block';
+waiterButton.onclick = function () {
+  waiterModal.style.display = 'block';
 }
 
 customerButton.onclick = function () {
@@ -26,8 +26,8 @@ closeChefModal.onclick = function () {
   chefModal.style.display = 'none';
 }
 
-closeStaffModal.onclick = function () {
-  staffModal.style.display = 'none';
+closeWaiterModal.onclick = function () {
+  waiterModal.style.display = 'none';
 }
 
 closeCustomerModal.onclick = function () {
@@ -130,22 +130,22 @@ function loginChef(email, password) {
     });
 }
 
-//staff and manager
-const staffForm = document.getElementById('staffForm');
-const errMessageStaff = document.getElementById('errMessageStaff');
+//waiter and manager
+const waiterForm = document.getElementById('waiterForm');
+const errMessageWaiter = document.getElementById('errMessageWaiter');
 
-staffForm.addEventListener('submit', function (event) {
+waiterForm.addEventListener('submit', function (event) {
   event.preventDefault();
 
-  const email = document.getElementById('staffEmail').value;
-  const password = document.getElementById('staffPassword').value;
+  const email = document.getElementById('waiterEmail').value;
+  const password = document.getElementById('waiterPassword').value;
 
-  loginStaff(email, password)
+  loginWaiter(email, password)
 
 });
 
-function loginStaff(email, password) {
-  const url = 'http://localhost:8888/staff-manager/login'
+function loginWaiter(email, password) {
+  const url = 'http://localhost:8888/waiter-manager/login'
   const data = {
     email: email,
     password: password
@@ -165,12 +165,12 @@ function loginStaff(email, password) {
     })
     .then(json => {
       if (json.code == 0) {
-        errMessageStaff.style.display = 'none'
-        staffForm.submit();
+        errMessageWaiter.style.display = 'none'
+        waiterForm.submit();
       }
       else {
-        errMessageStaff.innerHTML = json.message
-        errMessageStaff.style.display = 'block'
+        errMessageWaiter.innerHTML = json.message
+        errMessageWaiter.style.display = 'block'
       }
     })
     .catch(error => {

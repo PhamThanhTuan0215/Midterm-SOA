@@ -87,7 +87,7 @@ h1 {
 
 .modal-content {
     background-color: #fefefe;
-    margin: 10% auto;
+    margin: 5% auto;
     padding: 20px;
     border: 1px solid #888;
     border-radius: 5px;
@@ -285,7 +285,7 @@ table td {
     background-color: #04670c;
 }
 
-#currentShiftContent {
+#currentShiftContent, #historyContent {
     flex: 1;
     padding: 20px;
     background-color: #f0f0f0;
@@ -301,27 +301,28 @@ table td {
     width: 100%;
 }
 
-#currentShiftContent {
+#currentShiftContent, #historyContent {
     margin-right: 20px;
 }
 
-#currentShiftContent tr:hover {
+#currentShiftContent tr:hover,
+#historyContent tr:hover {
     background-color: #e0e0e0;
 }
 
-#currentShiftContent table {
+#currentShiftContent table,
+#historyContent table {
     width: 100%;
     border-collapse: collapse;
 }
 
 #currentShiftContent th,
-#currentShiftContent td {
+#currentShiftContent td,
+#historyContent th,
+#historyContent td {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
-}
-
-#currentShiftContent th {
     background-color: #f2f2f2;
 }
 
@@ -346,4 +347,80 @@ table td {
 
 .view-detail:focus-visible {
     outline: 2px solid #0056b3;
+}
+
+#billInformation {
+    margin-top: 20px;
+}
+
+#billInformation p {
+    margin: 5px 0;
+}
+
+#billInformation strong {
+    font-weight: bold;
+}
+
+#billInformation span {
+    color: #333;
+}
+
+#foodItemsTable table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#foodItemsTable th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#foodItemsTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+#foodItems td:first-child {
+    width: 60%;
+}
+
+#foodItems td:nth-child(2),
+#foodItems td:nth-child(3) {
+    width: 20%;
+    text-align: center;
+}
+
+#timeRange,
+#startDate,
+#endDate {
+    margin-right: 10px;
+}
+
+#searchFix,
+#searchFlex {
+    margin-top: 10px;
+}
+
+#customTimeRange label {
+    margin-right: 10px;
+}
+
+#customTimeRange input[type="date"] {
+    width: 150px;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#searchFix, #searchFlex {
+    background-color: rgb(16, 156, 232);
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#searchFix:hover, #searchFlex:hover {
+    background-color: blue;
 }

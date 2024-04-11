@@ -10,7 +10,7 @@ module.exports.home = (req, res) => {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
-    Employee.findOne({ email, $or: [{ role: 'staff' }, { role: 'manager' }] })
+    Employee.findOne({ email, $or: [{ role: 'waiter' }, { role: 'manager' }] })
         .then(employee => {
             if (!employee) {
                 return res.json({ code: 1, message: "Employee account does not exist" });
@@ -21,7 +21,7 @@ module.exports.home = (req, res) => {
             }
 
             req.session.employee = employee
-            res.render('Staff_Manager', { employee })
+            res.render('Waiter_Manager', { employee })
         })
         .catch(err => {
             return res.json({ code: 1, message: "Login Failed", error: err });
@@ -36,7 +36,7 @@ module.exports.login = (req, res) => {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
-    Employee.findOne({ email, $or: [{ role: 'staff' }, { role: 'manager' }] })
+    Employee.findOne({ email, $or: [{ role: 'waiter' }, { role: 'manager' }] })
         .then(employee => {
             if (!employee) {
                 return res.json({ code: 1, message: "Employee account does not exist" });
@@ -147,7 +147,7 @@ module.exports.payment = async (req, res) => {
                 }
 
                 let date = new Date();
-                let shift = getShift(date.getHours);
+                let shift = getShift(date.getHours());
                 date = formatDateString(date.toLocaleDateString());
 
                 let newBill = new Bill({

@@ -102,7 +102,7 @@ input[type="password"]:focus {
 }
 
 button#chefSubmitButton,
-button#staffSubmitButton,
+button#waiterSubmitButton,
 button#customerSubmitButton {
     background-color: #4caf50;
     color: white;
@@ -114,7 +114,7 @@ button#customerSubmitButton {
 }
 
 button#chefSubmitButton:hover,
-button#staffSubmitButton:hover,
+button#waiterSubmitButton:hover,
 button#customerSubmitButton:hover {
     background-color: #328a36;
 }
