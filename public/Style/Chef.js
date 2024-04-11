@@ -24,17 +24,19 @@ function displayListOrder(listOrder) {
     listOrderTableBody.innerHTML = ''
 
     listOrder.forEach(order => {
-        const newRow = document.createElement('tr');
-        newRow.innerHTML = `
-                        <td>${order.customer}</td>
-                        <td>${order.table_code}</td>
-                        <td>${order.status_completed ? 'Completed' : 'Not yet'}</td>
-                        <td class="${order.status_check ? 'checked' : 'new'}">${order.status_check ? 'Checked' : 'New'}</td>
-                        <td>
-                            <Button data-orderId="${order._id}" class="view-detail">View</Button>
-                        </td>
-                    `;
-        listOrderTableBody.appendChild(newRow);
+        if(order.total_price !== 0) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                            <td>${order.customer}</td>
+                            <td>${order.table_code}</td>
+                            <td>${order.status_completed ? 'Completed' : 'Not yet'}</td>
+                            <td class="${order.status_check ? 'checked' : 'new'}">${order.status_check ? 'Checked' : 'New'}</td>
+                            <td>
+                                <Button data-orderId="${order._id}" class="view-detail">View</Button>
+                            </td>
+                        `;
+            listOrderTableBody.appendChild(newRow);
+        }
     });
 
     addClickEventsForViewBtn()
@@ -232,4 +234,99 @@ function completeOrder(orderId) {
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);
         });
+}
+
+const changePasswordModal = document.getElementById('changePasswordModal');
+const closeChangePasswordModal = document.getElementById('closeChangePasswordModal');
+const btnChangePasswordConfirm = document.getElementById('btnChangePasswordConfirm');
+const changePWErrorMessage = document.getElementById('change-password-error-message');
+const toggleOldPassword = document.getElementById('toggleOldPassword');
+const toggleNewPassword = document.getElementById('toggleNewPassword');
+const oldPasswordInput = document.getElementById('old-password');
+const newPasswordInput = document.getElementById('new-password');
+
+toggleOldPassword.addEventListener('click', function() {
+    const type = oldPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    oldPasswordInput.setAttribute('type', type);
+    toggleOldPassword.classList.toggle('fa-eye');
+    toggleOldPassword.classList.toggle('fa-eye-slash');
+});
+
+toggleNewPassword.addEventListener('click', function() {
+    const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    newPasswordInput.setAttribute('type', type);
+    toggleNewPassword.classList.toggle('fa-eye');
+    toggleNewPassword.classList.toggle('fa-eye-slash');
+});
+
+closeChangePasswordModal.addEventListener('click', function() {
+    changePasswordModal.style.display = 'none';
+});
+
+btnChangePassword.addEventListener('click', function() {
+    changePasswordModal.style.display = 'block';
+});
+
+btnChangePasswordConfirm.addEventListener('click', function() {
+    const oldPassword = document.getElementById('old-password').value;
+    const newPassword = document.getElementById('new-password').value;
+
+    hashMultipleTimes(oldPassword, 10).then(hashOldPassword => {
+        hashMultipleTimes(newPassword, 10).then(hashNewPassword => {
+            changePassword(hashOldPassword, hashNewPassword)
+        });
+    });
+});
+
+function changePassword(oldPassword, newPassword) {
+
+    const url = 'http://localhost:8888/chef/change-password?id=' + '660942e963278e5b966308d3'
+    const data = {
+        oldPassword, newPassword
+      };
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                changePWErrorMessage.style.display = 'none'
+                document.getElementById('old-password').value = ''
+                document.getElementById('new-password').value = ''
+                changePasswordModal.style.display = 'none'
+            }
+            else {
+                changePWErrorMessage.style.display = 'block'
+                changePWErrorMessage.innerHTML = json.message
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+async function sha256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+async function hashMultipleTimes(str, times) {
+    let hash = str;
+    for (let i = 0; i < times; i++) {
+        hash = await sha256(hash);
+    }
+    return hash;
 }

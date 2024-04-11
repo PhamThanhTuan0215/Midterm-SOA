@@ -2,13 +2,13 @@ const Employee = require('../models/Employee')
 
 module.exports.change_password = (req, res) => {
     const id = req.query.id
-    const {password, newPassword} = req.body
+    const {oldPassword, newPassword} = req.body
 
     if(!id) {
         return res.json({ code: 1, message: "Please provide employee id" })
     }
 
-    if(!password) {
+    if(!oldPassword) {
         return res.json({ code: 1, message: "Please provide password" })
     }
     if(!newPassword) {
@@ -21,8 +21,8 @@ module.exports.change_password = (req, res) => {
                 return res.json({ code: 1, message: "Id not found" })
             }
 
-            if(employee.password !== password) {
-                return res.json({ code: 0, message: "Invalid password" })
+            if(employee.password !== oldPassword) {
+                return res.json({ code: 1, message: "Incorrect password" })
             }
 
             employee.password = newPassword

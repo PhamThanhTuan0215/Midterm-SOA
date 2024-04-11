@@ -48,6 +48,8 @@ if(btnHistory) {
 if(btnAccountManage) {
     btnAccountManage.addEventListener('click', function() {
         showContent(accountManageContent);
+
+        getListEmployee()
     });
 }
 
@@ -572,4 +574,348 @@ function displayBills(listBill) {
     });
 
     addClickEventsForViewBtn()
+}
+
+//account manage
+function getListEmployee() {
+    const url = 'http://localhost:8888/waiter-manager/employees'
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                displayListEmployee(json.listEmployee)
+            }
+            else {
+                console.log(json.message)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function displayListEmployee(listEmployee) {
+    const tableBody = document.querySelector('#accountManageContent tbody');
+    tableBody.innerHTML = '';
+
+    listEmployee.forEach(employee => {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${employee.employeeId}</td>
+            <td>${employee.name}</td>
+            <td>${employee.email}</td>
+            <td>${employee.role}</td>
+            <td>
+                <button class="btnEdit" 
+                    data-id="${employee._id}"
+                    data-employeeid="${employee.employeeId}"
+                    data-name="${employee.name}"
+                    data-email="${employee.email}"
+                    data-role="${employee.role}"
+                >Edit</button>
+                <button class="btnDelete" data-id="${employee._id}">Delete</button>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+    });
+
+    addClickEventsForDeleteBtn()
+    addClickEventsForEditBtn()
+}
+
+const btnAdd = document.getElementById('btnAdd');
+const btnChangePassword = document.getElementById('btnChangePassword');
+const addEmployeeModal = document.getElementById('addEmployeeModal');
+const deleteEmployeeModal = document.getElementById('deleteEmployeeModal');
+const editEmployeeModal = document.getElementById('editEmployeeModal');
+const changePasswordModal = document.getElementById('changePasswordModal');
+const closeAddEmployeeModal = document.getElementById('closeAddEmployeeModal');
+const closeDeleteEmployeeModal = document.getElementById('closeDeleteEmployeeModal');
+const closeEditEmployeeModal = document.getElementById('closeEditEmployeeModal');
+const closeChangePasswordModal = document.getElementById('closeChangePasswordModal');
+const btnAddConfirm = document.getElementById('btnAddConfirm');
+const btnDeleteConfirm = document.getElementById('btnDeleteConfirm');
+const btnEditConfirm = document.getElementById('btnEditConfirm');
+const btnChangePasswordConfirm = document.getElementById('btnChangePasswordConfirm');
+const addErrorMessage = document.getElementById('add-error-message');
+const deleteErrorMessage = document.getElementById('delete-error-message');
+const editErrorMessage = document.getElementById('edit-error-message');
+const changePWErrorMessage = document.getElementById('change-password-error-message');
+
+const togglePassword = document.getElementById('togglePassword');
+const toggleOldPassword = document.getElementById('toggleOldPassword');
+const toggleNewPassword = document.getElementById('toggleNewPassword');
+const passwordInput = document.getElementById('add-password');
+const oldPasswordInput = document.getElementById('old-password');
+const newPasswordInput = document.getElementById('new-password');
+
+togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    togglePassword.classList.toggle('fa-eye');
+    togglePassword.classList.toggle('fa-eye-slash');
+});
+
+toggleOldPassword.addEventListener('click', function() {
+    const type = oldPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    oldPasswordInput.setAttribute('type', type);
+    toggleOldPassword.classList.toggle('fa-eye');
+    toggleOldPassword.classList.toggle('fa-eye-slash');
+});
+
+toggleNewPassword.addEventListener('click', function() {
+    const type = newPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    newPasswordInput.setAttribute('type', type);
+    toggleNewPassword.classList.toggle('fa-eye');
+    toggleNewPassword.classList.toggle('fa-eye-slash');
+});
+
+closeAddEmployeeModal.addEventListener('click', function() {
+    addEmployeeModal.style.display = 'none';
+});
+
+closeDeleteEmployeeModal.addEventListener('click', function() {
+    deleteEmployeeModal.style.display = 'none';
+});
+
+closeEditEmployeeModal.addEventListener('click', function() {
+    editEmployeeModal.style.display = 'none';
+});
+
+closeChangePasswordModal.addEventListener('click', function() {
+    changePasswordModal.style.display = 'none';
+});
+
+btnAdd.addEventListener('click', function() {
+    addEmployeeModal.style.display = 'block';
+});
+
+btnChangePassword.addEventListener('click', function() {
+    changePasswordModal.style.display = 'block';
+});
+
+function addClickEventsForDeleteBtn() {
+    const buttons = document.querySelectorAll('.btnDelete');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const id = button.getAttribute('data-id');
+            deleteEmployeeModal.style.display = 'block'
+            btnDeleteConfirm.setAttribute('data-id', id);
+        });
+    });
+}
+
+function addClickEventsForEditBtn() {
+    const buttons = document.querySelectorAll('.btnEdit');
+
+    buttons.forEach(button => {
+        button.addEventListener('click', function () {
+            const id = button.getAttribute('data-id');
+            editEmployeeModal.style.display = 'block'
+            btnEditConfirm.setAttribute('data-id', id);
+
+            document.getElementById('edit-employeeId').value = button.getAttribute('data-employeeid');
+            document.getElementById('edit-name').value = button.getAttribute('data-name');
+            document.getElementById('edit-email').value = button.getAttribute('data-email');
+            document.getElementById('edit-role').value = button.getAttribute('data-role');
+        });
+    });
+}
+
+btnAddConfirm.addEventListener('click', function() {
+    const employeeId = document.getElementById('add-employeeId').value;
+    const name = document.getElementById('add-name').value;
+    const email = document.getElementById('add-email').value;
+    const role = document.getElementById('add-role').value;
+    const password_old = document.getElementById('add-password').value;
+
+    hashMultipleTimes(password_old, 10).then(password => {
+        addEmployee(employeeId, name, email, role, password)
+    });
+});
+
+btnDeleteConfirm.addEventListener('click', function() {
+    const id = this.dataset.id
+    deleteEmployee(id)
+});
+
+btnEditConfirm.addEventListener('click', function() {
+    const id = this.dataset.id
+    const employeeId = document.getElementById('edit-employeeId').value;
+    const name = document.getElementById('edit-name').value;
+    const email = document.getElementById('edit-email').value;
+    const role = document.getElementById('edit-role').value;
+
+    editEmployee(id, employeeId, name, email, role)
+});
+
+btnChangePasswordConfirm.addEventListener('click', function() {
+    const oldPassword = document.getElementById('old-password').value;
+    const newPassword = document.getElementById('new-password').value;
+
+    if(!oldPassword) {
+        changePWErrorMessage.style.display = 'block'
+        changePWErrorMessage.innerHTML = 'enter your password'
+        return
+    }
+    if(!newPassword) {
+        changePWErrorMessage.style.display = 'block'
+        changePWErrorMessage.innerHTML = 'enter new password'
+        return
+    }
+
+    hashMultipleTimes(oldPassword, 10).then(hashOldPassword => {
+        hashMultipleTimes(newPassword, 10).then(hashNewPassword => {
+            changePassword(hashOldPassword, hashNewPassword)
+        });
+    });
+});
+
+function addEmployee(employeeId, name, email, role, password) {
+    const url = 'http://localhost:8888/waiter-manager/employees/add'
+    const data = {
+        employeeId, name, email, role, password
+      };
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                addEmployeeModal.style.display = 'none'
+                getListEmployee()
+            }
+            else {
+                addErrorMessage.style.display = 'block'
+                addErrorMessage.innerHTML = json.message
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function deleteEmployee(id) {
+    const url = 'http://localhost:8888/waiter-manager/employees/delete?id=' + id
+      fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                deleteEmployeeModal.style.display = 'none'
+                getListEmployee()
+            }
+            else {
+                deleteErrorMessage.style.display = 'block'
+                deleteErrorMessage.innerHTML = json.message
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function editEmployee(id, employeeId, name, email, role) {
+    const url = 'http://localhost:8888/waiter-manager/employees/edit?id=' + id
+    const data = {
+        employeeId, name, email, role
+      };
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                editEmployeeModal.style.display = 'none'
+                getListEmployee()
+            }
+            else {
+                editErrorMessage.style.display = 'block'
+                editErrorMessage.innerHTML = json.message
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+function changePassword(oldPassword, newPassword) {
+
+    const url = 'http://localhost:8888/waiter-manager/change-password?id=' + '660942e963278e5b966308d3'
+    const data = {
+        oldPassword, newPassword
+      };
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                changePWErrorMessage.style.display = 'none'
+                document.getElementById('old-password').value = ''
+                document.getElementById('new-password').value = ''
+                changePasswordModal.style.display = 'none'
+            }
+            else {
+                changePWErrorMessage.style.display = 'block'
+                changePWErrorMessage.innerHTML = json.message
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        }); 
+}
+
+async function sha256(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+}
+
+async function hashMultipleTimes(str, times) {
+    let hash = str;
+    for (let i = 0; i < times; i++) {
+        hash = await sha256(hash);
+    }
+    return hash;
 }

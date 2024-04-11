@@ -90,9 +90,11 @@ chefForm.addEventListener('submit', function (event) {
   event.preventDefault();
 
   const email = document.getElementById('chefEmail').value;
-  const password = document.getElementById('chefPassword').value;
+  const password_old = document.getElementById('chefPassword').value;
 
-  loginChef(email, password)
+  hashMultipleTimes(password_old, 10).then(password => {
+    loginChef(email, password)
+  });
 
 });
 
@@ -118,6 +120,7 @@ function loginChef(email, password) {
     .then(json => {
       if (json.code == 0) {
         errMessageChef.style.display = 'none'
+        document.getElementById('chefPassword').value = password
         chefForm.submit();
       }
       else {
@@ -138,9 +141,11 @@ waiterForm.addEventListener('submit', function (event) {
   event.preventDefault();
 
   const email = document.getElementById('waiterEmail').value;
-  const password = document.getElementById('waiterPassword').value;
+  const password_old = document.getElementById('waiterPassword').value;
 
-  loginWaiter(email, password)
+  hashMultipleTimes(password_old, 10).then(password => {
+    loginWaiter(email, password)
+  });
 
 });
 
@@ -166,6 +171,7 @@ function loginWaiter(email, password) {
     .then(json => {
       if (json.code == 0) {
         errMessageWaiter.style.display = 'none'
+        document.getElementById('waiterPassword').value = password
         waiterForm.submit();
       }
       else {
@@ -176,4 +182,21 @@ function loginWaiter(email, password) {
     .catch(error => {
       console.error('There was a problem with your fetch operation:', error);
     });
+}
+
+async function sha256(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+async function hashMultipleTimes(str, times) {
+  let hash = str;
+  for (let i = 0; i < times; i++) {
+      hash = await sha256(hash);
+  }
+  return hash;
 }
