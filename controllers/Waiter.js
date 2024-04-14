@@ -3,6 +3,10 @@ const OrderDetail = require('../models/OrderDetail')
 const Employee = require('../models/Employee')
 const Bill = require('../models/Bill');
 
+const createTokenEmployee = require('../auth/CreateToken_Employee')
+
+const { addToExpiredList } = require('../auth/expiredTokenList')
+
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
@@ -21,7 +25,8 @@ module.exports.home = (req, res) => {
             }
 
             req.session.employee = employee
-            res.render('Waiter_Manager', { employee })
+            const token = req.query.token
+            res.render('Waiter_Manager', { employee, token })
         })
         .catch(err => {
             return res.json({ code: 1, message: "Login Failed", error: err });
@@ -46,7 +51,9 @@ module.exports.login = (req, res) => {
                 return res.json({ code: 1, message: "Incorrect password" });
             }
 
-            return res.json({ code: 0, message: "Login success" });
+            const token = createTokenEmployee(employee)
+            req.session.token = token
+            return res.json({ code: 0, message: "Login success", token });
         })
         .catch(err => {
             return res.json({ code: 1, message: "Login Failed", error: err });
@@ -54,8 +61,8 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.logout = (req, res) => {
+    addToExpiredList(req.session.token)
     req.session.destroy()
-
     res.redirect('/')
 }
 

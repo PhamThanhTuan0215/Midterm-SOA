@@ -1,3 +1,8 @@
+const employeeData = document.getElementById('employeeData');
+const token = employeeData.getAttribute('data-token');
+const employeeId = employeeData.getAttribute('data-employeeid');
+const id = employeeData.getAttribute('data-id');
+
 const btnNewOrder = document.getElementById('btnNewOrder');
 const btnPayment = document.getElementById('btnPayment');
 const btnCurrentShift = document.getElementById('btnCurrentShift');
@@ -64,7 +69,7 @@ function showContent(contentElement) {
 
 // new order
 function getOccupiedTables() {
-    const url = 'http://localhost:8888/waiter-manager/occupied-tables'
+    const url = 'http://localhost:8888/waiter-manager/occupied-tables?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -75,6 +80,9 @@ function getOccupiedTables() {
         .then(json => {
             if (json.code == 0) {
                 displayGridTable(json.tableCodes)
+            }
+            else {
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -137,7 +145,7 @@ btnOpen.addEventListener('click', function() {
 });
 
 function openTable(customer, customers_number, table_code) {
-    const url = 'http://localhost:8888/waiter-manager/new-order'
+    const url = 'http://localhost:8888/waiter-manager/new-order?token=' + token
     const data = {
         customer: customer,
         customers_number: customers_number,
@@ -164,6 +172,9 @@ function openTable(customer, customers_number, table_code) {
             customerNumberInput.value = ''
             alert('Successfully opened code number ' + table_code)
         }
+        else {
+            alert(json.message)
+        }
       })
       .catch(error => {
         console.error('There was a problem with your fetch operation:', error);
@@ -184,7 +195,7 @@ btnSearchOrder.addEventListener('click', function() {
 });
 
 function searchOrder(customer, table_code) {
-    const url = 'http://localhost:8888/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code
+    const url = 'http://localhost:8888/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -258,14 +269,27 @@ closePaymentModal.addEventListener('click', function() {
 const btnConfirmPayment = document.getElementById('btnConfirmPayment');
 
 btnConfirmPayment.addEventListener('click', function() {
-    const _employeeId = document.getElementById('employeeData').dataset.employeeid
-    const employeeId = document.getElementById('employeeId').value;
+    const _employeeId = document.getElementById('employeeId').value;
     const received = parseFloat(document.getElementById('received').value);
     const btnPay = document.getElementById('btnPay')
     const orderId = btnPay.dataset.orderid
     const totalPrice = parseFloat(btnPay.dataset.totalprice);
 
     const errorMessage = document.getElementById('errMessagePayment')
+
+    if(!_employeeId) {
+        errorMessage.innerHTML = 'Please enter employee id'
+        errorMessage.style.display = 'block'
+        errorMessage.style.color = 'red'
+        return
+    }
+
+    if(!received) {
+        errorMessage.innerHTML = 'Please enter received'
+        errorMessage.style.display = 'block'
+        errorMessage.style.color = 'red'
+        return
+    }
 
     if(_employeeId !== employeeId) {
         errorMessage.innerHTML = 'Invalid employee id'
@@ -280,13 +304,13 @@ btnConfirmPayment.addEventListener('click', function() {
         return
     }
 
-    payment(employeeId, orderId, received)
+    payment(_employeeId, orderId, received)
 
 });
 
 
 function payment(employeeId, orderId, received) {
-    const url = 'http://localhost:8888/waiter-manager/payment'
+    const url = 'http://localhost:8888/waiter-manager/payment?token=' + token
     const data = {
         employeeId: employeeId,
         orderId: orderId,
@@ -331,7 +355,7 @@ const closeDetailBillModal = document.getElementById('closeDetailBillModal');
 function getBillsCurrentShift() {
     const shift = getCurrentShift()
 
-    const url = 'http://localhost:8888/waiter-manager/bills-shift?shift=' + shift
+    const url = 'http://localhost:8888/waiter-manager/bills-shift?shift=' + shift + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -344,7 +368,7 @@ function getBillsCurrentShift() {
                 displayBillsCurrentShift(json.listBill)
             }
             else {
-                console.log(json.message)
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -404,7 +428,7 @@ function addClickEventsForViewBtn() {
 }
 
 function getDetailBill(billId) {
-    const url = 'http://localhost:8888/waiter-manager/detail-bill?billId=' + billId
+    const url = 'http://localhost:8888/waiter-manager/detail-bill?billId=' + billId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -420,7 +444,7 @@ function getDetailBill(billId) {
                 displayDetailBill(bill, listFood)
             }
             else {
-                console.log(json.message)
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -532,7 +556,7 @@ searchFlex.addEventListener('click', function() {
 
 function getBills(startDate, endDate) {
 
-    const url = 'http://localhost:8888/waiter-manager/bills-date?startDate=' + startDate + '&endDate=' + endDate
+    const url = 'http://localhost:8888/waiter-manager/bills-date?startDate=' + startDate + '&endDate=' + endDate + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -545,7 +569,7 @@ function getBills(startDate, endDate) {
                 displayBills(json.listBill)
             }
             else {
-                console.log(json.message)
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -578,7 +602,7 @@ function displayBills(listBill) {
 
 //account manage
 function getListEmployee() {
-    const url = 'http://localhost:8888/waiter-manager/employees'
+    const url = 'http://localhost:8888/waiter-manager/employees?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -591,7 +615,7 @@ function getListEmployee() {
                 displayListEmployee(json.listEmployee)
             }
             else {
-                console.log(json.message)
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -735,6 +759,12 @@ btnAddConfirm.addEventListener('click', function() {
     const role = document.getElementById('add-role').value;
     const password_old = document.getElementById('add-password').value;
 
+    if(!employeeId || !name || !email || !role || !password_old) {
+        addErrorMessage.style.display = 'block'
+        addErrorMessage.innerHTML = 'Please provide full information'
+        return
+    }
+
     hashMultipleTimes(password_old, 10).then(password => {
         addEmployee(employeeId, name, email, role, password)
     });
@@ -751,6 +781,12 @@ btnEditConfirm.addEventListener('click', function() {
     const name = document.getElementById('edit-name').value;
     const email = document.getElementById('edit-email').value;
     const role = document.getElementById('edit-role').value;
+
+    if(!employeeId || !name || !email || !role) {
+        editErrorMessage.style.display = 'block'
+        editErrorMessage.innerHTML = 'Please provide full information'
+        return
+    }
 
     editEmployee(id, employeeId, name, email, role)
 });
@@ -778,7 +814,7 @@ btnChangePasswordConfirm.addEventListener('click', function() {
 });
 
 function addEmployee(employeeId, name, email, role, password) {
-    const url = 'http://localhost:8888/waiter-manager/employees/add'
+    const url = 'http://localhost:8888/waiter-manager/employees/add?token=' + token
     const data = {
         employeeId, name, email, role, password
       };
@@ -811,7 +847,7 @@ function addEmployee(employeeId, name, email, role, password) {
 }
 
 function deleteEmployee(id) {
-    const url = 'http://localhost:8888/waiter-manager/employees/delete?id=' + id
+    const url = 'http://localhost:8888/waiter-manager/employees/delete?id=' + id + '&token=' + token
       fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -835,7 +871,7 @@ function deleteEmployee(id) {
 }
 
 function editEmployee(id, employeeId, name, email, role) {
-    const url = 'http://localhost:8888/waiter-manager/employees/edit?id=' + id
+    const url = 'http://localhost:8888/waiter-manager/employees/edit?id=' + id + '&token=' + token
     const data = {
         employeeId, name, email, role
       };
@@ -869,7 +905,7 @@ function editEmployee(id, employeeId, name, email, role) {
 
 function changePassword(oldPassword, newPassword) {
 
-    const url = 'http://localhost:8888/waiter-manager/change-password?id=' + '660942e963278e5b966308d3'
+    const url = 'http://localhost:8888/waiter-manager/change-password?id=' + id + '&token=' + token
     const data = {
         oldPassword, newPassword
       };

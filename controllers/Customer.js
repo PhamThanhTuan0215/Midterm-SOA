@@ -2,6 +2,10 @@ const Food = require('../models/Food')
 const Order = require('../models/Order')
 const OrderDetail = require('../models/OrderDetail')
 
+const createTokenCustomer = require('../auth/CreateToken_Customer')
+
+const { addToExpiredList } = require('../auth/expiredTokenList')
+
 module.exports.home = (req, res) => {
 
     const {customer, table_code} = req.body
@@ -16,7 +20,8 @@ module.exports.home = (req, res) => {
             return res.json({ code: 1, message: "Order has not been created yet" });
         }
 
-        res.render('Customer', {customer, table_code, orderId: order._id})
+        const token = req.query.token
+        res.render('Customer', {customer, table_code, orderId: order._id, token})
     })
     .catch(err => {
         return res.json({ code: 1, message: "Login Failed", error: err });
@@ -36,11 +41,19 @@ module.exports.login = (req, res) => {
                 return res.json({ code: 1, message: "Order has not been created yet" });
             }
 
-            return res.json({ code: 0, message: "Login success"});
+            const token = createTokenCustomer(customer, table_code)
+            req.session.token = token
+            return res.json({ code: 0, message: "Login success", token});
         })
         .catch(err => {
             return res.json({ code: 1, message: "Login Failed", error: err });
         });
+}
+
+module.exports.logout = (req, res) => {
+    addToExpiredList(req.session.token)
+    req.session.destroy()
+    res.redirect('/')
 }
 
 module.exports.get_order = (req, res) => {

@@ -219,3 +219,20 @@ table tr {
     color: orange; /* Màu cam */
 }
 
+#btnLogout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #0eac0e;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#btnLogout:hover {
+    background-color: #04670c;
+}

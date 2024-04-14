@@ -70,6 +70,9 @@ function loginCustomer(customer, table_code) {
     .then(json => {
       if (json.code == 0) {
         errMessageCustomer.style.display = 'none'
+        var url = customerForm.action;
+        url = url + '?token=' + json.token
+        customerForm.action = url
         customerForm.submit();
       }
       else {
@@ -121,6 +124,9 @@ function loginChef(email, password) {
       if (json.code == 0) {
         errMessageChef.style.display = 'none'
         document.getElementById('chefPassword').value = password
+        var url = chefForm.action;
+        url = url + '?token=' + json.token
+        chefForm.action = url
         chefForm.submit();
       }
       else {
@@ -172,6 +178,9 @@ function loginWaiter(email, password) {
       if (json.code == 0) {
         errMessageWaiter.style.display = 'none'
         document.getElementById('waiterPassword').value = password
+        var url = waiterForm.action;
+        url = url + '?token=' + json.token
+        waiterForm.action = url
         waiterForm.submit();
       }
       else {

@@ -1,4 +1,5 @@
 const customerDataDiv = document.getElementById('customerData');
+const token = customerDataDiv.getAttribute('data-token');
 const customer = customerDataDiv.getAttribute('data-customer');
 const table_code = customerDataDiv.getAttribute('data-table_code');
 const orderId = customerDataDiv.getAttribute('data-orderId');
@@ -166,7 +167,9 @@ function orderFood() {
         listFoods: listFoods
     };
 
-    fetch('http://localhost:8888/customer/add-food', {
+    const url = 'http://localhost:8888/customer/add-food?token=' + token
+
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -178,6 +181,9 @@ function orderFood() {
             if (json.code == 0) {
                 getListFoodOrdered(json.order.customer, json.order.table_code)
             }
+            else {
+                alert(json.message)
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -185,7 +191,7 @@ function orderFood() {
 }
 
 function getListFoodOrdered(customer, table_code) {
-    const url = 'http://localhost:8888/customer/order?customer=' + customer + '&table_code=' + table_code
+    const url = 'http://localhost:8888/customer/get-order?customer=' + customer + '&table_code=' + table_code + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -199,6 +205,9 @@ function getListFoodOrdered(customer, table_code) {
                     return;
                 }
                 orderedFood(json.order, json.listFood)
+            }
+            else {
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -230,7 +239,7 @@ function orderedFood(order, listFood) {
 }
 
 function getFoodByCategory(category) {
-    const url = 'http://localhost:8888/customer/food?category=' + category
+    const url = 'http://localhost:8888/customer/food?category=' + category + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -239,9 +248,14 @@ function getFoodByCategory(category) {
             return response.json();
         })
         .then(json => {
-            titleFood.innerHTML = category
-            listFood = json.data
-            displayItems(json.data)
+            if(json.code == 0) {
+                titleFood.innerHTML = category
+                listFood = json.data
+                displayItems(json.data)
+            }
+            else {
+                alert(json.message)
+            }
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);

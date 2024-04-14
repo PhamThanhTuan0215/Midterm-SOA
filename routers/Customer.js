@@ -3,14 +3,18 @@ const Router = express.Router()
 
 const CustomerController = require('../controllers/Customer')
 
-Router.post('/', CustomerController.home)
+const Customer_Verify = require('../auth/VerifyToken_Customer')
+
+Router.post('/', Customer_Verify, CustomerController.home)
 
 Router.post('/login', CustomerController.login)
 
-Router.get('/order', CustomerController.get_order)
+Router.get('/logout', CustomerController.logout)
 
-Router.get('/food', CustomerController.get_by_category)
+Router.get('/get-order', Customer_Verify, CustomerController.get_order)
 
-Router.post('/add-food', CustomerController.add_foods_into_order)
+Router.get('/food', Customer_Verify, CustomerController.get_by_category)
+
+Router.post('/add-food', Customer_Verify, CustomerController.add_foods_into_order)
 
 module.exports = Router

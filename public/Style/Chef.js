@@ -1,7 +1,11 @@
+const chefData = document.getElementById('chefData');
+const token = chefData.getAttribute('data-token');
+const id = chefData.getAttribute('data-id');
+
 getListOrder()
 
 function getListOrder() {
-    const url = 'http://localhost:8888/chef/orders'
+    const url = 'http://localhost:8888/chef/orders?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -12,6 +16,9 @@ function getListOrder() {
         .then(json => {
             if (json.code == 0) {
                 displayListOrder(json.listOrder)
+            }
+            else {
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -59,7 +66,7 @@ function addClickEventsForViewBtn() {
 }
 
 function getDetailOrder(orderId) {
-    const url = 'http://localhost:8888/chef/detail-order?orderId=' + orderId
+    const url = 'http://localhost:8888/chef/detail-order?orderId=' + orderId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -70,6 +77,9 @@ function getDetailOrder(orderId) {
         .then(json => {
             if (json.code == 0) {
                 displayDetailOrder(json.order, json.listFood)
+            }
+            else {
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -117,7 +127,7 @@ function displayDetailOrder(order, listFood) {
 }
 
 document.getElementById('btnManageFoods').addEventListener('click', function () {
-    const url = 'http://localhost:8888/chef/food-management'
+    const url = 'http://localhost:8888/chef/food-management?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -128,6 +138,9 @@ document.getElementById('btnManageFoods').addEventListener('click', function () 
         .then(json => {
             if (json.code == 0) {
                 displayFoodsInventory(json.listFood)
+            }
+            else {
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -191,7 +204,7 @@ function toggleButtonState(button, newState) {
 }
 
 function setFoodStatus(name, status) {
-    const url = 'http://localhost:8888/chef/set-status-food?name=' + name + '&status=' + status
+    const url = 'http://localhost:8888/chef/set-status-food?name=' + name + '&status=' + status + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -204,7 +217,7 @@ function setFoodStatus(name, status) {
                 return true
             }
             else {
-                console.log(json)
+                alert(json.message)
                 return false
             }
         })
@@ -214,7 +227,7 @@ function setFoodStatus(name, status) {
 }
 
 function completeOrder(orderId) {
-    const url = 'http://localhost:8888/chef/completed-order?orderId=' + orderId
+    const url = 'http://localhost:8888/chef/completed-order?orderId=' + orderId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -228,7 +241,7 @@ function completeOrder(orderId) {
                 getListOrder()
             }
             else {
-                console.log(json)
+                alert(json.message)
             }
         })
         .catch(error => {
@@ -237,6 +250,7 @@ function completeOrder(orderId) {
 }
 
 const changePasswordModal = document.getElementById('changePasswordModal');
+const btnChangePassword = document.getElementById('btnChangePassword');
 const closeChangePasswordModal = document.getElementById('closeChangePasswordModal');
 const btnChangePasswordConfirm = document.getElementById('btnChangePasswordConfirm');
 const changePWErrorMessage = document.getElementById('change-password-error-message');
@@ -271,6 +285,17 @@ btnChangePasswordConfirm.addEventListener('click', function() {
     const oldPassword = document.getElementById('old-password').value;
     const newPassword = document.getElementById('new-password').value;
 
+    if(!oldPassword) {
+        changePWErrorMessage.style.display = 'block'
+        changePWErrorMessage.innerHTML = 'enter your password'
+        return
+    }
+    if(!newPassword) {
+        changePWErrorMessage.style.display = 'block'
+        changePWErrorMessage.innerHTML = 'enter new password'
+        return
+    }
+
     hashMultipleTimes(oldPassword, 10).then(hashOldPassword => {
         hashMultipleTimes(newPassword, 10).then(hashNewPassword => {
             changePassword(hashOldPassword, hashNewPassword)
@@ -280,7 +305,7 @@ btnChangePasswordConfirm.addEventListener('click', function() {
 
 function changePassword(oldPassword, newPassword) {
 
-    const url = 'http://localhost:8888/chef/change-password?id=' + '660942e963278e5b966308d3'
+    const url = 'http://localhost:8888/chef/change-password?id=' + id + '&token=' + token
     const data = {
         oldPassword, newPassword
       };

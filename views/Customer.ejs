@@ -14,7 +14,7 @@
 <body>
 
     <div id="customerData" data-customer="<%= customer %>" data-table_code="<%= table_code %>"
-        data-orderId="<%= orderId %>"></div>
+        data-orderId="<%= orderId %>" data-token="<%= token %>"></div>
 
     <div class="container">
 
@@ -119,6 +119,10 @@
                 </div>
             </div>
         </div>
+
+        <form action="/customer/logout" method="get">
+            <button type="submit" id="btnLogout">Logout</button>
+        </form>
 
     </div>
 
