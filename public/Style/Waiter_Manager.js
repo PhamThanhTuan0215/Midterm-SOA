@@ -69,7 +69,7 @@ function showContent(contentElement) {
 
 // new order
 function getOccupiedTables() {
-    const url = 'http://localhost:8888/waiter-manager/occupied-tables?token=' + token
+    const url = '/waiter-manager/occupied-tables?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -145,7 +145,7 @@ btnOpen.addEventListener('click', function() {
 });
 
 function openTable(customer, customers_number, table_code) {
-    const url = 'http://localhost:8888/waiter-manager/new-order?token=' + token
+    const url = '/waiter-manager/new-order?token=' + token
     const data = {
         customer: customer,
         customers_number: customers_number,
@@ -195,7 +195,7 @@ btnSearchOrder.addEventListener('click', function() {
 });
 
 function searchOrder(customer, table_code) {
-    const url = 'http://localhost:8888/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code + '&token=' + token
+    const url = '/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -310,7 +310,7 @@ btnConfirmPayment.addEventListener('click', function() {
 
 
 function payment(employeeId, orderId, received) {
-    const url = 'http://localhost:8888/waiter-manager/payment?token=' + token
+    const url = '/waiter-manager/payment?token=' + token
     const data = {
         employeeId: employeeId,
         orderId: orderId,
@@ -355,7 +355,7 @@ const closeDetailBillModal = document.getElementById('closeDetailBillModal');
 function getBillsCurrentShift() {
     const shift = getCurrentShift()
 
-    const url = 'http://localhost:8888/waiter-manager/bills-shift?shift=' + shift + '&token=' + token
+    const url = '/waiter-manager/bills-shift?shift=' + shift + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -428,7 +428,7 @@ function addClickEventsForViewBtn() {
 }
 
 function getDetailBill(billId) {
-    const url = 'http://localhost:8888/waiter-manager/detail-bill?billId=' + billId + '&token=' + token
+    const url = '/waiter-manager/detail-bill?billId=' + billId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -556,7 +556,7 @@ searchFlex.addEventListener('click', function() {
 
 function getBills(startDate, endDate) {
 
-    const url = 'http://localhost:8888/waiter-manager/bills-date?startDate=' + startDate + '&endDate=' + endDate + '&token=' + token
+    const url = '/waiter-manager/bills-date?startDate=' + startDate + '&endDate=' + endDate + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -602,7 +602,7 @@ function displayBills(listBill) {
 
 //account manage
 function getListEmployee() {
-    const url = 'http://localhost:8888/waiter-manager/employees?token=' + token
+    const url = '/waiter-manager/employees?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -814,7 +814,7 @@ btnChangePasswordConfirm.addEventListener('click', function() {
 });
 
 function addEmployee(employeeId, name, email, role, password) {
-    const url = 'http://localhost:8888/waiter-manager/employees/add?token=' + token
+    const url = '/waiter-manager/employees/add?token=' + token
     const data = {
         employeeId, name, email, role, password
       };
@@ -847,7 +847,7 @@ function addEmployee(employeeId, name, email, role, password) {
 }
 
 function deleteEmployee(id) {
-    const url = 'http://localhost:8888/waiter-manager/employees/delete?id=' + id + '&token=' + token
+    const url = '/waiter-manager/employees/delete?id=' + id + '&token=' + token
       fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -871,7 +871,7 @@ function deleteEmployee(id) {
 }
 
 function editEmployee(id, employeeId, name, email, role) {
-    const url = 'http://localhost:8888/waiter-manager/employees/edit?id=' + id + '&token=' + token
+    const url = '/waiter-manager/employees/edit?id=' + id + '&token=' + token
     const data = {
         employeeId, name, email, role
       };
@@ -905,7 +905,7 @@ function editEmployee(id, employeeId, name, email, role) {
 
 function changePassword(oldPassword, newPassword) {
 
-    const url = 'http://localhost:8888/waiter-manager/change-password?id=' + id + '&token=' + token
+    const url = '/waiter-manager/change-password?id=' + id + '&token=' + token
     const data = {
         oldPassword, newPassword
       };

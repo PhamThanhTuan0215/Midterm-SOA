@@ -22,6 +22,32 @@ app.get('/', (req, res) => {
     res.render('Home')
 })
 
+const connections = require('./notification/connections')
+// Nhận kết nối đầu bếp từ client
+app.get('/notification/chef', (req, res) => {
+    // Thiết lập kết nối SSE
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    connections.pushChefConnection(res);
+
+    req.on('close', () => {
+        connections.removeChefConnection(res)
+    });
+});
+
+// Nhận kết nối khách hàng từ client
+app.get('/notification/customer', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    connections.pushCustomerConnection(res);
+
+    req.on('close', () => {
+        connections.removeCustomerConnection(res)
+    });
+});
+
 app.use('/customer', require('./routers/Customer'))
 app.use('/waiter-manager', require('./routers/Waiter_Manager'))
 app.use('/chef', require('./routers/Chef'))
@@ -31,7 +57,7 @@ app.use((req, res) => {
 })
 
 const PORT = process.env.PORT || 3000
-const LINK_WEB = process.env.LINK_WEB || 'http://localhost:' + PORT
+const LINK_WEBSITE = process.env.LINK_WEBSITE || 'http://localhost:' + PORT
 const {MONGODB_URI, DB_NAME} = process.env
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,
@@ -40,7 +66,7 @@ mongoose.connect(MONGODB_URI, {
 })
 .then(() => {
     app.listen(PORT, () => {
-        console.log(LINK_WEB)
+        console.log(LINK_WEBSITE)
     })
 })
 .catch(e => console.log('Can not connect db server: ' + e.message))

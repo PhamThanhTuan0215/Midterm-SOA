@@ -49,7 +49,7 @@ customerForm.addEventListener('submit', function (event) {
 });
 
 function loginCustomer(customer, table_code) {
-  const url = 'http://localhost:8888/customer/login'
+  const url = '/customer/login'
   const data = {
     customer: customer,
     table_code: table_code
@@ -102,7 +102,7 @@ chefForm.addEventListener('submit', function (event) {
 });
 
 function loginChef(email, password) {
-  const url = 'http://localhost:8888/chef/login'
+  const url = '/chef/login'
   const data = {
     email: email,
     password: password
@@ -156,7 +156,7 @@ waiterForm.addEventListener('submit', function (event) {
 });
 
 function loginWaiter(email, password) {
-  const url = 'http://localhost:8888/waiter-manager/login'
+  const url = '/waiter-manager/login'
   const data = {
     email: email,
     password: password

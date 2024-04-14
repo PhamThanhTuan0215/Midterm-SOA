@@ -7,6 +7,8 @@ const createTokenEmployee = require('../auth/CreateToken_Employee')
 
 const { addToExpiredList } = require('../auth/expiredTokenList')
 
+const connections = require('../notification/connections')
+
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
@@ -93,6 +95,12 @@ module.exports.set_status_food = (req, res) => {
             if (!updatedFood) {
                 return res.json({ code: 1, message: "Food not found" });
             }
+
+            connections.getCustomerConnections().forEach(conn => {
+                conn.write('event: change-status-food\n');
+                conn.write(`data: ${JSON.stringify({ message: 'Change status food!' })}\n\n`);
+            });
+
             return res.json({ code: 0, updatedFood });
         })
         .catch(err => {
@@ -162,6 +170,11 @@ module.exports.set_completed_order = (req, res) => {
                     if (!updatedOrder) {
                         return res.json({ code: 1, message: "Order not found" });
                     }
+
+                    connections.getCustomerConnections().forEach(conn => {
+                        conn.write('event: completed-order\n');
+                        conn.write(`data: ${JSON.stringify({ message: 'Completed order!' })}\n\n`);
+                    });
                     return res.json({ code: 0, updatedOrder });
                 })
         })

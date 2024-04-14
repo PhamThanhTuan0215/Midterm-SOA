@@ -4,6 +4,8 @@ const customer = customerDataDiv.getAttribute('data-customer');
 const table_code = customerDataDiv.getAttribute('data-table_code');
 const orderId = customerDataDiv.getAttribute('data-orderId');
 
+let current_category = 'main food'
+
 getListFoodOrdered(customer, table_code)
 
 getFoodByCategory('main food')
@@ -38,12 +40,15 @@ function displayItems(listItems) {
 
 document.getElementById('btnMainFood').addEventListener('click', function () {
     getFoodByCategory('main food')
+    current_category = 'main food'
 });
 document.getElementById('btnDrinks').addEventListener('click', function () {
     getFoodByCategory('drinks')
+    current_category = 'drinks'
 })
 document.getElementById('btnExtraFood').addEventListener('click', function () {
     getFoodByCategory('extra food')
+    current_category = 'extra food'
 })
 
 // thêm 1 hàng mới vào bảng thức ăn đang chọn
@@ -167,7 +172,7 @@ function orderFood() {
         listFoods: listFoods
     };
 
-    const url = 'http://localhost:8888/customer/add-food?token=' + token
+    const url = '/customer/add-food?token=' + token
 
     fetch(url, {
         method: 'POST',
@@ -191,7 +196,7 @@ function orderFood() {
 }
 
 function getListFoodOrdered(customer, table_code) {
-    const url = 'http://localhost:8888/customer/get-order?customer=' + customer + '&table_code=' + table_code + '&token=' + token
+    const url = '/customer/get-order?customer=' + customer + '&table_code=' + table_code + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -239,7 +244,7 @@ function orderedFood(order, listFood) {
 }
 
 function getFoodByCategory(category) {
-    const url = 'http://localhost:8888/customer/food?category=' + category + '&token=' + token
+    const url = '/customer/food?category=' + category + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -248,7 +253,7 @@ function getFoodByCategory(category) {
             return response.json();
         })
         .then(json => {
-            if(json.code == 0) {
+            if (json.code == 0) {
                 titleFood.innerHTML = category
                 listFood = json.data
                 displayItems(json.data)
@@ -261,3 +266,33 @@ function getFoodByCategory(category) {
             console.error('There was a problem with your fetch operation:', error);
         });
 }
+
+//notification
+const eventSource = new EventSource('/notification/customer');
+
+eventSource.addEventListener('completed-order', (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Received message:', data.message);
+    getListFoodOrdered(customer, table_code)
+});
+
+eventSource.addEventListener('change-status-food', (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Received message:', data.message);
+    getFoodByCategory(current_category)
+});
+
+eventSource.addEventListener('paid-order', (event) => {
+    const data = JSON.parse(event.data);
+    console.log('Received message:', data.message);
+    
+    // window.location.href = '/';
+});
+
+eventSource.addEventListener('open', () => {
+    console.log('Connection opened');
+});
+
+eventSource.addEventListener('error', (error) => {
+    console.error('Error occurred:', error);
+});

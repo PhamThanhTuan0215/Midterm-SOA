@@ -5,7 +5,7 @@ const id = chefData.getAttribute('data-id');
 getListOrder()
 
 function getListOrder() {
-    const url = 'http://localhost:8888/chef/orders?token=' + token
+    const url = '/chef/orders?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -66,7 +66,7 @@ function addClickEventsForViewBtn() {
 }
 
 function getDetailOrder(orderId) {
-    const url = 'http://localhost:8888/chef/detail-order?orderId=' + orderId + '&token=' + token
+    const url = '/chef/detail-order?orderId=' + orderId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -127,7 +127,7 @@ function displayDetailOrder(order, listFood) {
 }
 
 document.getElementById('btnManageFoods').addEventListener('click', function () {
-    const url = 'http://localhost:8888/chef/food-management?token=' + token
+    const url = '/chef/food-management?token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -204,7 +204,7 @@ function toggleButtonState(button, newState) {
 }
 
 function setFoodStatus(name, status) {
-    const url = 'http://localhost:8888/chef/set-status-food?name=' + name + '&status=' + status + '&token=' + token
+    const url = '/chef/set-status-food?name=' + name + '&status=' + status + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -227,7 +227,7 @@ function setFoodStatus(name, status) {
 }
 
 function completeOrder(orderId) {
-    const url = 'http://localhost:8888/chef/completed-order?orderId=' + orderId + '&token=' + token
+    const url = '/chef/completed-order?orderId=' + orderId + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -305,7 +305,7 @@ btnChangePasswordConfirm.addEventListener('click', function() {
 
 function changePassword(oldPassword, newPassword) {
 
-    const url = 'http://localhost:8888/chef/change-password?id=' + id + '&token=' + token
+    const url = '/chef/change-password?id=' + id + '&token=' + token
     const data = {
         oldPassword, newPassword
       };
@@ -355,3 +355,20 @@ async function hashMultipleTimes(str, times) {
     }
     return hash;
 }
+
+//notification
+const eventSource = new EventSource('/notification/chef');
+
+eventSource.addEventListener('receive-order', (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Received message:', data.message);
+  getListOrder()
+});
+
+eventSource.addEventListener('open', () => {
+  console.log('Connection opened');
+});
+
+eventSource.addEventListener('error', (error) => {
+  console.error('Error occurred:', error);
+});

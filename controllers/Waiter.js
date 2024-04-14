@@ -7,6 +7,8 @@ const createTokenEmployee = require('../auth/CreateToken_Employee')
 
 const { addToExpiredList } = require('../auth/expiredTokenList')
 
+const connections = require('../notification/connections')
+
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
@@ -172,6 +174,12 @@ module.exports.payment = async (req, res) => {
                 newBill.save()
                     .then(bill => {
                         order.save()
+
+                        connections.getCustomerConnections().forEach(conn => {
+                            conn.write('event: paid-order\n');
+                            conn.write(`data: ${JSON.stringify({ message: 'Order has been paid!' })}\n\n`);
+                        });
+
                         return res.json({ code: 0, message: "Payment successfully", refund: refundAmount, bill: bill});
                     })
             }
