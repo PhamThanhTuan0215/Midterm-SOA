@@ -96,10 +96,7 @@ module.exports.set_status_food = (req, res) => {
                 return res.json({ code: 1, message: "Food not found" });
             }
 
-            connections.getCustomerConnections().forEach(conn => {
-                conn.write('event: change-status-food\n');
-                conn.write(`data: ${JSON.stringify({ message: 'Change status food!' })}\n\n`);
-            });
+            connections.changeStatusFoodToCustomer()
 
             return res.json({ code: 0, updatedFood });
         })
@@ -171,10 +168,7 @@ module.exports.set_completed_order = (req, res) => {
                         return res.json({ code: 1, message: "Order not found" });
                     }
 
-                    connections.getCustomerConnections().forEach(conn => {
-                        conn.write('event: completed-order\n');
-                        conn.write(`data: ${JSON.stringify({ message: 'Completed order!' })}\n\n`);
-                    });
+                    connections.completedOrderToCustomer()
                     return res.json({ code: 0, updatedOrder });
                 })
         })

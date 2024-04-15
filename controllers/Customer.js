@@ -131,10 +131,7 @@ module.exports.add_foods_into_order = (req, res) => {
             order.status_check = false
             order.save()
 
-            connections.getChefConnections().forEach(conn => {
-                conn.write('event: receive-order\n');
-                conn.write(`data: ${JSON.stringify({ message: 'New order received!' })}\n\n`);
-            });
+            connections.sentOrderToChef()
             
             res.json({ code: 0, message: 'Added food to order successfully', order })
         })

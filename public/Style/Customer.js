@@ -134,7 +134,9 @@ function addClickEvents() {
     });
 }
 
-document.getElementById('order').addEventListener('click', function () {
+document.getElementById('order').addEventListener('click', openConfirmModel);
+
+function openConfirmModel() {
     const selectingRows = document.querySelectorAll('#selecting tbody tr');
 
     if (selectingRows.length <= 0) {
@@ -143,7 +145,7 @@ document.getElementById('order').addEventListener('click', function () {
     }
 
     document.getElementById('confirmModal').style.display = 'block'
-});
+}
 
 document.getElementById('btnConfirm').addEventListener('click', function () {
     document.getElementById('confirmModal').style.display = 'none'
@@ -287,8 +289,20 @@ eventSource.addEventListener('change-status-food', (event) => {
 eventSource.addEventListener('paid-order', (event) => {
     const data = JSON.parse(event.data);
     console.log('Received message:', data.message);
+
+    const orderBtn = document.getElementById('order')
+
+    orderBtn.innerHTML = 'Paid'
+
+    orderBtn.removeEventListener('click', openConfirmModel);
+
+    const newClickHandler = function () {
+        alert('Order has been paid')
+    };
     
-    // window.location.href = '/';
+    orderBtn.onclick = newClickHandler;
+
+    alert('Payment success')
 });
 
 eventSource.addEventListener('open', () => {

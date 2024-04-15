@@ -13,6 +13,13 @@ function pushChefConnection(res) {
     chef_connections.push(res);
 }
 
+function sentOrderToChef() {
+    chef_connections.forEach(conn => {
+        conn.write('event: receive-order\n');
+        conn.write(`data: ${JSON.stringify({ message: 'New order received!' })}\n\n`);
+    });
+}
+
 function pushCustomerConnection(res) {
     customer_connections.push(res);
 }
@@ -25,11 +32,36 @@ function removeCustomerConnection(res) {
     customer_connections = customer_connections.filter(conn => conn !== res);
 }
 
+function changeStatusFoodToCustomer() {
+    customer_connections.forEach(conn => {
+        conn.write('event: change-status-food\n');
+        conn.write(`data: ${JSON.stringify({ message: 'Change status food!' })}\n\n`);
+    });
+}
+
+function completedOrderToCustomer() {
+    customer_connections.forEach(conn => {
+        conn.write('event: completed-order\n');
+        conn.write(`data: ${JSON.stringify({ message: 'Completed order!' })}\n\n`);
+    });
+}
+
+function completedPaymentToCustomer() {
+    customer_connections.forEach(conn => {
+        conn.write('event: paid-order\n');
+        conn.write(`data: ${JSON.stringify({ message: 'Order has been paid!' })}\n\n`);
+    });
+}
+
 module.exports = {
     getChefConnections,
     getCustomerConnections,
     pushChefConnection,
+    sentOrderToChef,
     pushCustomerConnection,
     removeChefConnection,
-    removeCustomerConnection
+    removeCustomerConnection,
+    changeStatusFoodToCustomer,
+    completedOrderToCustomer,
+    completedPaymentToCustomer
 };

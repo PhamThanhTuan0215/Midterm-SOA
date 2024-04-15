@@ -175,10 +175,7 @@ module.exports.payment = async (req, res) => {
                     .then(bill => {
                         order.save()
 
-                        connections.getCustomerConnections().forEach(conn => {
-                            conn.write('event: paid-order\n');
-                            conn.write(`data: ${JSON.stringify({ message: 'Order has been paid!' })}\n\n`);
-                        });
+                        connections.completedPaymentToCustomer()
 
                         return res.json({ code: 0, message: "Payment successfully", refund: refundAmount, bill: bill});
                     })
