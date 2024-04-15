@@ -1,3 +1,5 @@
+history.replaceState(null, null, window.location.pathname);
+
 const customerDataDiv = document.getElementById('customerData');
 const token = customerDataDiv.getAttribute('data-token');
 const customer = customerDataDiv.getAttribute('data-customer');

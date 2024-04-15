@@ -1,3 +1,5 @@
+history.replaceState(null, null, window.location.pathname);
+
 const employeeData = document.getElementById('employeeData');
 const token = employeeData.getAttribute('data-token');
 const employeeId = employeeData.getAttribute('data-employeeid');

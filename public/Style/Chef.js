@@ -1,3 +1,5 @@
+history.replaceState(null, null, window.location.pathname);
+
 const chefData = document.getElementById('chefData');
 const token = chefData.getAttribute('data-token');
 const id = chefData.getAttribute('data-id');
@@ -186,7 +188,6 @@ function addClickEventsForOnOffBtn() {
             const warehouseStatusCell = parentRow.querySelector('td:nth-child(4)');
             warehouseStatusCell.textContent = (newState === 'On' ? 'In stock' : 'Out of stock');
 
-            // gửi event tới giao diện customer để cập nhật trạng thái danh sách món ăn
         });
     });
 }
