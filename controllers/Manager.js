@@ -81,6 +81,10 @@ module.exports.get_bill_by_date = (req, res) => {
 module.exports.get_detail_bill = (req, res) => {
     const billId = req.query.billId
 
+    if (!billId) {
+        return res.json({ code: 1, message: "Lack of information" })
+    }
+
     Bill.findById(billId)
     .then(bill => {
         OrderDetail.find({ orderId: bill.orderId })

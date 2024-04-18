@@ -98,7 +98,7 @@ module.exports.get_by_category = (req, res) => {
             return res.json({ code: 0, data: listItems })
         })
         .catch(err => {
-            return json({ code: 2, message: "Error retrieving food items by category", error: err })
+            return res.json({ code: 2, message: "Error retrieving food items by category", error: err })
         });
 }
 

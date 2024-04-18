@@ -103,7 +103,7 @@ module.exports.add_new_order = (req, res) => {
             }
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to add new order", err });
+            return res.json({ code: 1, message: "Failed to add new order", error: err });
         });
 }
 

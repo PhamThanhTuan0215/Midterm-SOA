@@ -1,0 +1,48 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: Restaurant API
+  description: API documentation for restaurant operations
+basePath: /
+paths:
+  /waiter-manager/new-order:
+    post:
+      summary: Add new order
+      description: Waiter or manager add a new order
+      tags:
+        - Waiter/Manager
+      parameters:
+        - name: token
+          in: query
+          description: Customer's token
+          required: true
+          type: string
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                example: 0
+              order:
+                type: object
+                # Define order schema here
+              listFood:
+                type: array
+                # Define food item schema here
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        example: 1
+      message:
+        type: string
+        example: "Failed response"

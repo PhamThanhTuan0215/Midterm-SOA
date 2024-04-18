@@ -101,7 +101,7 @@ module.exports.set_status_food = (req, res) => {
             return res.json({ code: 0, updatedFood });
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to update food status", err });
+            return res.json({ code: 1, message: "Failed to update food status", error: err });
         });
 }
 
@@ -127,7 +127,6 @@ module.exports.get_all_orders = (req, res) => {
             res.json({ code: 0, listOrder });
         })
         .catch(error => {
-            console.error('Error fetching orders:', error);
             res.json({ code: 1, message: 'Error fetching orders' });
         });
 
@@ -184,6 +183,6 @@ module.exports.set_completed_order = (req, res) => {
                 })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to update order", err });
+            return res.json({ code: 1, message: "Failed to update order", error: err });
         });
 }
