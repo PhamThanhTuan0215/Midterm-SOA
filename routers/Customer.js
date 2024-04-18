@@ -15,6 +15,6 @@ Router.get('/get-order', Customer_Verify, CustomerController.get_order)
 
 Router.get('/food', Customer_Verify, CustomerController.get_by_category)
 
-Router.post('/add-food', Customer_Verify, CustomerController.add_foods_into_order)
+Router.post('/order-food', Customer_Verify, CustomerController.add_foods_into_order)
 
 module.exports = Router

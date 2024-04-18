@@ -151,7 +151,7 @@ module.exports.add_employee = (req, res) => {
                 return res.json({ code: 1, message: 'Email already exists' })
             }
 
-            return res.json({ code: 1, message: 'Add failed, an error has occurred', error: e.message })
+            return res.json({ code: 1, message: 'Add failed, an error has occurred' })
         })
 }
 
@@ -174,7 +174,7 @@ module.exports.delete_employee = (req, res) => {
             if (e.message.includes('Cast to ObjectId failed')) {
                 return res.json({ code: 1, message: "Invalid Id" })
             }
-            return res.json({ code: 1, message: "Delete failed, An error has occurred", error: e.message })
+            return res.json({ code: 1, message: "Delete failed, An error has occurred" })
         })
 }
 
@@ -252,7 +252,7 @@ module.exports.edit_employee = (req, res) => {
                         else if (e.message.includes('email')) {
                             return res.json({ code: 1, message: 'Email already exists' })
                         }
-                        return res.json({ code: 1, message: "Update failed, An error has occurred", error: e.message })
+                        return res.json({ code: 1, message: "Update failed, An error has occurred" })
                     })
 
         })
@@ -260,6 +260,6 @@ module.exports.edit_employee = (req, res) => {
             if (e.message.includes('Cast to ObjectId failed')) {
                 return res.json({ code: 1, message: "Invalid Id" })
             }
-            return res.json({ code: 1, message: "Update failed, An error has occurred", error: e.message })
+            return res.json({ code: 1, message: "Update failed, An error has occurred" })
         })
 }

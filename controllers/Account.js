@@ -33,6 +33,6 @@ module.exports.change_password = (req, res) => {
             if (e.message.includes('Cast to ObjectId failed')) {
                 return res.json({ code: 1, message: "Invalid Id" })
             }
-            return res.json({ code: 1, message: "Change password failed, An error has occurred", error: e.message })
+            return res.json({ code: 1, message: "Change password failed, An error has occurred" })
         })
 }

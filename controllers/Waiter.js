@@ -30,7 +30,7 @@ module.exports.home = (req, res) => {
             res.render('Waiter_Manager', { employee, token })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Login Failed", error: err });
+            return res.json({ code: 1, message: "Login Failed" });
         });
 }
 
@@ -58,7 +58,7 @@ module.exports.login = (req, res) => {
             return res.json({ code: 0, message: "Login success", token });
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Login Failed", error: err });
+            return res.json({ code: 1, message: "Login Failed" });
         });
 }
 
@@ -75,7 +75,7 @@ module.exports.get_occupied_tables = (req, res) => {
             return res.json({ code: 0, tableCodes});
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to fetch occupied table codes", error: err });
+            return res.json({ code: 1, message: "Failed to fetch occupied table codes" });
         });
 }
 
@@ -103,7 +103,7 @@ module.exports.add_new_order = (req, res) => {
             }
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to add new order", error: err });
+            return res.json({ code: 1, message: "Failed to add new order" });
         });
 }
 
@@ -130,7 +130,7 @@ module.exports.get_order = (req, res) => {
                 })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to fetch order details", error: err });
+            return res.json({ code: 1, message: "Failed to fetch order details" });
         });
 }
 
@@ -190,7 +190,7 @@ module.exports.payment = async (req, res) => {
             }
         })
         .catch(error => {
-            return res.json({ code: 1, message: "Payment failed", error });
+            return res.json({ code: 1, message: "Payment failed" });
         });
 }
 

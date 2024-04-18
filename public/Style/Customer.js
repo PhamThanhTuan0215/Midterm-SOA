@@ -174,7 +174,7 @@ function orderFood() {
         listFoods: listFoods
     };
 
-    const url = '/customer/add-food?token=' + token
+    const url = '/customer/order-food?token=' + token
 
     fetch(url, {
         method: 'POST',
@@ -257,8 +257,8 @@ function getFoodByCategory(category) {
         .then(json => {
             if (json.code == 0) {
                 titleFood.innerHTML = category
-                listFood = json.data
-                displayItems(json.data)
+                listFood = json.listFood
+                displayItems(json.listFood)
             }
             else {
                 alert(json.message)

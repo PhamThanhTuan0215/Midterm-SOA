@@ -1,48 +1,306 @@
-swagger: '2.0'
+openapi: 3.0.3
 info:
-  version: '1.0.0'
   title: Restaurant API
   description: API documentation for restaurant operations
-basePath: /
+  version: 1.0.11
+servers:
+  - url: http://localhost:8888
+tags:
+  - name: Customer
+  - name: Waiter/Manager
+  - name: Chef
 paths:
-  /waiter-manager/new-order:
+  /customer:
     post:
-      summary: Add new order
-      description: Waiter or manager add a new order
       tags:
-        - Waiter/Manager
+        - Customer
+      summary: Customer user interface
+      description: Customer accesses the customer user interface
       parameters:
         - name: token
           in: query
           description: Customer's token
           required: true
-          type: string
+          schema:
+            type: string
+      requestBody:
+        description: Information of customer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer-Information'
       responses:
-        200:
+        '200':
           description: Successful response
-          schema:
-            type: object
-            properties:
-              code:
-                type: integer
-                example: 0
-              order:
+          content:
+            text/html:
+              schema:
+                type: string
+                example: HTML content for the Customer interface   
+        '400':
+          description: Failed response
+
+  /customer/login:
+    post:
+      tags:
+        - Customer
+      summary: Login
+      description: Customer login
+      requestBody:
+        description: Information of customer
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer-Information'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
                 type: object
-                # Define order schema here
-              listFood:
-                type: array
-                # Define food item schema here
-        400:
-          description: Bad request
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Login success
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM0NDE0NDYsImV4cCI6MTcxMzQ2MzA0Nn0.uIc3phjr1wr_gDRN16BuJ2CGqNNKugN3WW-vNsJh7pg     
+        '400':
+          description: Failed response
+
+  /customer/logout:
+    get:
+      tags:
+        - Customer
+      summary: Logout
+      description: Customer logout
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Redirect to HTML content for the Home page
+        '400':
+          description: Failed response
+
+  /customer/food:
+    get:
+      tags:
+        - Customer
+      summary: Get food by category
+      description: etrieve food items by category
+      parameters:
+        - name: token
+          in: query
+          description: Customer's token
+          required: true
           schema:
-            $ref: '#/definitions/Error'
-definitions:
-  Error:
-    type: object
-    properties:
-      code:
-        type: integer
-        example: 1
-      message:
-        type: string
-        example: "Failed response"
+            type: string
+        - name: category
+          in: query
+          description: Food category
+          required: true
+          schema:
+            type: string
+            default: main food
+            enum:
+              - main food
+              - drinks
+              - extra food
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listFood:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FoodItem'      
+        '400':
+          description: Failed response
+
+  /customer/get-order:
+    get:
+      tags:
+        - Customer
+      summary: Get customer order
+      description: Get information about customer order
+      parameters:
+        - name: token
+          in: query
+          description: Customer's token
+          required: true
+          schema:
+            type: string
+        - name: customer
+          in: query
+          description: Customer's name
+          required: true
+          schema:
+            type: string
+        - name: table_code
+          in: query
+          description: Table code
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  order:
+                    $ref: '#/components/schemas/Order'
+                  listFood:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FoodItem'
+        '400':
+          description: Failed response
+
+  /customer/order-food:
+    post:
+      tags:
+        - Customer
+      summary: Order food
+      description: Customer order food
+      parameters:
+        - name: token
+          in: query
+          description: Customer's token
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Information of order id and list food
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                orderId:
+                  type: integer
+                  example: 6620be4d35d390948ef9c9a8
+                listFoods:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/FoodItemToOrder'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Added food to order successfully
+                  order:
+                    $ref: '#/components/schemas/Order'
+                  listFood:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FoodItemToOrder'
+
+        '400':
+          description: Failed response
+
+components:
+  schemas:
+    FoodItem:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 66091d4363278e5b966308ba
+        name:
+          type: string
+          example: Pizza
+        price:
+          type: number
+          example: 9.99
+        category:
+          type: string
+          example: main food
+        url_image:
+          type: string
+          example: Pizza.png
+        status:
+          type: boolean
+          example: true
+    Order:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6620be4d35d390948ef9c9a8
+        employeeId:
+          type: string
+          example: W001
+        customer:
+          type: string
+          example: Quoc Kien
+        customers_number:
+          type: integer
+          example: 3
+        table_code:
+          type: integer
+          example: 1
+        status_completed:
+          type: boolean
+          example: true
+        status_payment:
+          type: boolean
+          example: true
+        status_check:
+          type: boolean
+          example: true
+        timestamp:
+          type: string
+          example: '2024-04-18T06:31:41.752+00:00'
+    Customer-Information:
+      type: object
+      properties:
+        customer:
+          type: string
+          example: Phat
+        table_code:
+          type: integer
+          example: 1
+    FoodItemToOrder:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Hamburger
+        quantity:
+          type: number
+          example: 1
+        totalPrice:
+          type: number
+          example: 8.49
+        note:
+          type: string
+          example: ít rau

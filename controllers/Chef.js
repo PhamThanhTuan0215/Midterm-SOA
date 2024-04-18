@@ -30,7 +30,7 @@ module.exports.home = (req, res) => {
             res.render('Chef', { employee, token })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Login Failed", error: err });
+            return res.json({ code: 1, message: "Login Failed"});
         });
 }
 
@@ -58,7 +58,7 @@ module.exports.login = (req, res) => {
             return res.json({ code: 0, message: "Login success", token });
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Login Failed", error: err });
+            return res.json({ code: 1, message: "Login Failed"});
         });
 }
 
@@ -101,7 +101,7 @@ module.exports.set_status_food = (req, res) => {
             return res.json({ code: 0, updatedFood });
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to update food status", error: err });
+            return res.json({ code: 1, message: "Failed to update food status" });
         });
 }
 
@@ -155,7 +155,7 @@ module.exports.detail_order = (req, res) => {
                 })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to fetch order details", error: err });
+            return res.json({ code: 1, message: "Failed to fetch order details" });
         });
 }
 
@@ -183,6 +183,6 @@ module.exports.set_completed_order = (req, res) => {
                 })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to update order", error: err });
+            return res.json({ code: 1, message: "Failed to update order" });
         });
 }
