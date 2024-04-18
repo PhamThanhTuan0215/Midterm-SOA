@@ -26,7 +26,6 @@ module.exports.home = (req, res) => {
                 return res.json({ code: 1, message: "Incorrect password" });
             }
 
-            req.session.employee = employee
             const token = req.query.token
             res.render('Chef', { employee, token })
         })
@@ -53,6 +52,7 @@ module.exports.login = (req, res) => {
                 return res.json({ code: 1, message: "Incorrect password" });
             }
 
+            req.session.employee = employee
             const token = createTokenEmployee(employee)
             req.session.token = token
             return res.json({ code: 0, message: "Login success", token });
@@ -107,9 +107,20 @@ module.exports.set_status_food = (req, res) => {
 
 module.exports.get_all_orders = (req, res) => {
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     Order.aggregate([
         {
-            $sort: { status_check: 1, status_completed: 1 }
+            $match: {
+                timestamp: {
+                    $gte: today,
+                    $lt: new Date(today.getTime() + 86400000) // 86400000 là tổng số mili giây trong 1 ngày
+                }
+            }
+        },
+        {
+            $sort: { status_check: 1, status_completed: 1, timestamp: -1 }
         }
     ])
         .then(listOrder => {
@@ -168,7 +179,7 @@ module.exports.set_completed_order = (req, res) => {
                         return res.json({ code: 1, message: "Order not found" });
                     }
 
-                    connections.completedOrderToCustomer()
+                    connections.completedOrderToCustomer(updatedOrder._id)
                     return res.json({ code: 0, updatedOrder });
                 })
         })

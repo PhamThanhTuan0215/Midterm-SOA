@@ -43,6 +43,7 @@ module.exports.login = (req, res) => {
                 return res.json({ code: 1, message: "Order has not been created yet" });
             }
 
+            req.session.order = order
             const token = createTokenCustomer(customer, table_code)
             req.session.token = token
             return res.json({ code: 0, message: "Login success", token});

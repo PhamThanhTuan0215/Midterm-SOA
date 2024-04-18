@@ -9,7 +9,11 @@ const OrderSchema = new Schema({
     status_completed: { type: Boolean, default: false },
     status_payment: { type: Boolean, default: false },
     total_price: { type: Number, default: 0.00 },
-    status_check: { type: Boolean, default: false }
+    status_check: { type: Boolean, default: false },
+    timestamp: {
+        type: Date,
+        default: Date.now
+    }
 })
 
 module.exports = mongoose.model('Order', OrderSchema)

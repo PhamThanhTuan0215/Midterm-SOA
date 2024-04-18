@@ -39,17 +39,17 @@ function changeStatusFoodToCustomer() {
     });
 }
 
-function completedOrderToCustomer() {
+function completedOrderToCustomer(orderId) {
     customer_connections.forEach(conn => {
         conn.write('event: completed-order\n');
-        conn.write(`data: ${JSON.stringify({ message: 'Completed order!' })}\n\n`);
+        conn.write(`data: ${JSON.stringify({ message: 'Completed order!', orderId })}\n\n`);
     });
 }
 
-function completedPaymentToCustomer() {
+function completedPaymentToCustomer(orderId) {
     customer_connections.forEach(conn => {
         conn.write('event: paid-order\n');
-        conn.write(`data: ${JSON.stringify({ message: 'Order has been paid!' })}\n\n`);
+        conn.write(`data: ${JSON.stringify({ message: 'Order has been paid!', orderId })}\n\n`);
     });
 }
 

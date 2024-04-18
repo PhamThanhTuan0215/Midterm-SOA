@@ -26,7 +26,6 @@ module.exports.home = (req, res) => {
                 return res.json({ code: 1, message: "Incorrect password" });
             }
 
-            req.session.employee = employee
             const token = req.query.token
             res.render('Waiter_Manager', { employee, token })
         })
@@ -53,6 +52,7 @@ module.exports.login = (req, res) => {
                 return res.json({ code: 1, message: "Incorrect password" });
             }
 
+            req.session.employee = employee
             const token = createTokenEmployee(employee)
             req.session.token = token
             return res.json({ code: 0, message: "Login success", token });
@@ -86,13 +86,21 @@ module.exports.add_new_order = (req, res) => {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
-    let order = new Order({
-        employeeId: req.session.employee.employeeId, customer, customers_number, table_code
-    })
-
-    order.save()
-        .then(() => {
-            return res.json({ code: 0, orderId: order._id })
+    Order.findOne({customer, table_code, status_payment: false})
+        .then(o => {
+            if(!o) {
+                let order = new Order({
+                    employeeId: req.session.employee.employeeId, customer, customers_number, table_code
+                })
+            
+                order.save()
+                    .then(() => {
+                        return res.json({ code: 0, orderId: order._id })
+                    })
+            }
+            else {
+                return res.json({ code: 1, message: "The table is occupied" });
+            }
         })
         .catch(err => {
             return res.json({ code: 1, message: "Failed to add new order" });
@@ -175,7 +183,7 @@ module.exports.payment = async (req, res) => {
                     .then(bill => {
                         order.save()
 
-                        connections.completedPaymentToCustomer()
+                        connections.completedPaymentToCustomer(order._id)
 
                         return res.json({ code: 0, message: "Payment successfully", refund: refundAmount, bill: bill});
                     })

@@ -1,5 +1,3 @@
-history.replaceState(null, null, window.location.pathname);
-
 const chefData = document.getElementById('chefData');
 const token = chefData.getAttribute('data-token');
 const id = chefData.getAttribute('data-id');

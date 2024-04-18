@@ -1,5 +1,3 @@
-history.replaceState(null, null, window.location.pathname);
-
 const customerDataDiv = document.getElementById('customerData');
 const token = customerDataDiv.getAttribute('data-token');
 const customer = customerDataDiv.getAttribute('data-customer');
@@ -276,6 +274,11 @@ const eventSource = new EventSource('/notification/customer');
 
 eventSource.addEventListener('completed-order', (event) => {
     const data = JSON.parse(event.data);
+
+    if(data.orderId !== orderId) {
+        return
+    }
+
     console.log('Received message:', data.message);
     getListFoodOrdered(customer, table_code)
 });
@@ -288,6 +291,11 @@ eventSource.addEventListener('change-status-food', (event) => {
 
 eventSource.addEventListener('paid-order', (event) => {
     const data = JSON.parse(event.data);
+
+    if(data.orderId !== orderId) {
+        return
+    }
+
     console.log('Received message:', data.message);
 
     const orderBtn = document.getElementById('order')
