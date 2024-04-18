@@ -31,9 +31,9 @@ module.exports.home = (req, res) => {
 }
 
 module.exports.login = (req, res) => {
-    const {customer, table_code} = req.body
+    const {customer, table_code, OTP} = req.body
 
-    if (!customer || !table_code) {
+    if (!customer || !table_code || !OTP) {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
@@ -41,6 +41,10 @@ module.exports.login = (req, res) => {
         .then(order => {
             if (!order) {
                 return res.json({ code: 1, message: "Order has not been created yet" });
+            }
+
+            if(order.OTP !== OTP) {
+                return res.json({ code: 1, message: "Incorrect OTP code" });
             }
 
             req.session.order = order

@@ -43,16 +43,18 @@ customerForm.addEventListener('submit', function (event) {
 
   const customer = document.getElementById('customerName').value;
   const table_code = document.getElementById('tableCode').value;
+  const OTP = document.getElementById('OTP').value;
 
-  loginCustomer(customer, table_code)
+  loginCustomer(customer, table_code, OTP)
 
 });
 
-function loginCustomer(customer, table_code) {
+function loginCustomer(customer, table_code, OTP) {
   const url = '/customer/login'
   const data = {
     customer: customer,
-    table_code: table_code
+    table_code: table_code,
+    OTP: OTP
   };
   fetch(url, {
     method: 'POST',

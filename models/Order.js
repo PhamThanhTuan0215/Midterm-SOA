@@ -6,6 +6,7 @@ const OrderSchema = new Schema({
     customer: String,
     customers_number: Number,
     table_code: Number,
+    OTP: String,
     status_completed: { type: Boolean, default: false },
     status_payment: { type: Boolean, default: false },
     total_price: { type: Number, default: 0.00 },

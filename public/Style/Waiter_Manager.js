@@ -58,6 +58,10 @@ if(btnAccountManage) {
     });
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    btnNewOrder.click();
+});
+
 function showContent(contentElement) {
     const contents = document.querySelectorAll('.content');
     contents.forEach(content => {
@@ -95,7 +99,7 @@ function getOccupiedTables() {
         })
         .then(json => {
             if (json.code == 0) {
-                displayGridTable(json.tableCodes, tableQuantity)
+                displayGridTable(json.occupiedTables)
             }
             else {
                 alert(json.message)
@@ -134,8 +138,12 @@ function displayGridTable(occupiedTables) {
         gridItem.classList.add('grid-item');
         gridItem.textContent = i;
         
-        if (occupiedTables.includes(i)) {
+        const tableInfo = occupiedTables.find(table => table.table_code === i);
+        if (tableInfo) {
             gridItem.classList.add('occupied');
+            gridItem.addEventListener('click', function() {
+                alert(`customer: ${tableInfo.customer}\nOTP: ${tableInfo.OTP}`)
+            });
         } else {
             gridItem.classList.add('unoccupied');
             gridItem.addEventListener('click', function() {

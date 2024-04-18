@@ -70,9 +70,9 @@ module.exports.logout = (req, res) => {
 
 module.exports.get_occupied_tables = (req, res) => {
 
-    Order.distinct("table_code", {status_payment: false})
-        .then(tableCodes => {
-            return res.json({ code: 0, tableCodes});
+    Order.find({ status_payment: false }, { customer: 1, table_code: 1, OTP: 1 })
+        .then(occupiedTables => {
+            return res.json({ code: 0, occupiedTables });
         })
         .catch(err => {
             return res.json({ code: 1, message: "Failed to fetch occupied table codes" });
@@ -86,11 +86,17 @@ module.exports.add_new_order = (req, res) => {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
+    if(customers_number < 1) {
+        return res.json({ code: 1, message: "Invalid customer number" })
+    }
+
     Order.findOne({customer, table_code, status_payment: false})
         .then(o => {
             if(!o) {
+                const OTP = generateRandomString(4);
+
                 let order = new Order({
-                    employeeId: req.session.employee.employeeId, customer, customers_number, table_code
+                    employeeId: req.session.employee.employeeId, customer, customers_number, table_code, OTP
                 })
             
                 order.save()
@@ -215,4 +221,13 @@ function formatDateString(inputDateString) {
     let formattedDate = `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${year}`;
 
     return formattedDate;
+}
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
 }
