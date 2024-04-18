@@ -67,6 +67,22 @@ function showContent(contentElement) {
     contentElement.style.display = 'block';
 }
 
+document.getElementById('tableQuantity').addEventListener('keydown', function(event) {
+    event.preventDefault();
+});
+
+document.getElementById('tableQuantity').addEventListener('wheel', function(event) {
+    if (event.deltaY < 0) {
+        this.stepUp();
+    } else {
+        this.stepDown();
+    }
+});
+
+document.getElementById('tableQuantity').addEventListener('change', function() {
+    getOccupiedTables()
+})
+
 // new order
 function getOccupiedTables() {
     const url = '/waiter-manager/occupied-tables?token=' + token
@@ -79,7 +95,7 @@ function getOccupiedTables() {
         })
         .then(json => {
             if (json.code == 0) {
-                displayGridTable(json.tableCodes)
+                displayGridTable(json.tableCodes, tableQuantity)
             }
             else {
                 alert(json.message)
@@ -111,7 +127,9 @@ function displayGridTable(occupiedTables) {
 
     gridContainer.innerHTML = ''
 
-    for (let i = 1; i <= 30; i++) {
+    const tableQuantity = parseInt(document.getElementById('tableQuantity').value) ?? 30
+
+    for (let i = 1; i <= tableQuantity; i++) {
         const gridItem = document.createElement('div');
         gridItem.classList.add('grid-item');
         gridItem.textContent = i;
