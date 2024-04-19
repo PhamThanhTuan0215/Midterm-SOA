@@ -172,14 +172,20 @@ module.exports.set_completed_order = (req, res) => {
         { status: true }
     )
         .then(() => {
-            Order.findByIdAndUpdate(orderId, { status_completed: true }, { new: true })
-                .then(updatedOrder => {
-                    if (!updatedOrder) {
+            Order.findByIdAndUpdate(orderId, { status_completed: true }, { new: false })
+                .then(oldOrder => {
+                    if (!oldOrder) {
                         return res.json({ code: 1, message: "Order not found" });
                     }
 
-                    connections.completedOrderToCustomer(updatedOrder._id)
-                    return res.json({ code: 0, updatedOrder });
+                    if(oldOrder.status_completed === true) {
+                        return res.json({ code: 1, message: "Previously completed order" });
+                    }
+
+                    oldOrder.status_completed = true
+
+                    connections.completedOrderToCustomer(oldOrder._id)
+                    return res.json({ code: 0, message: "The order has been marked complete", updatedOrder: oldOrder });
                 })
         })
         .catch(err => {

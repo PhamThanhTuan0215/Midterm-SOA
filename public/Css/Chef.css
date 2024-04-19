@@ -67,8 +67,9 @@ h2 {
     color: green;
 }
 
+#detail-order .waiting-icon,
 #list-order .waiting-icon {
-    color: red;
+    color: orange;
 }
 
 .view-detail {

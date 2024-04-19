@@ -1,14 +1,18 @@
 openapi: 3.0.3
+
 info:
   title: Restaurant API
   description: API documentation for restaurant operations
   version: 1.0.11
+
 servers:
   - url: http://localhost:8888
+
 tags:
   - name: Customer
   - name: Waiter/Manager
   - name: Chef
+
 paths:
   /customer:
     post:
@@ -23,22 +27,30 @@ paths:
           required: true
           schema:
             type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM1Mjc0MjYsImV4cCI6MTcxMzU0OTAyNn0.OWbCY9gilukyfHVesUZwLoprQRPKqHPdb1LPF-xe7YA
       requestBody:
         description: Information of customer
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer-Information'
+              $ref: "#/components/schemas/Customer-Information"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Customer-Information"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             text/html:
               schema:
                 type: string
-                example: HTML content for the Customer interface   
-        '400':
-          description: Failed response
+                example: HTML content for the Customer interface
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
   /customer/login:
     post:
@@ -51,9 +63,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Customer-Information'
+              $ref: "#/components/schemas/Customer-Information"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Customer-Information"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -68,9 +83,13 @@ paths:
                     example: Login success
                   token:
                     type: string
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM0NDE0NDYsImV4cCI6MTcxMzQ2MzA0Nn0.uIc3phjr1wr_gDRN16BuJ2CGqNNKugN3WW-vNsJh7pg     
-        '400':
-          description: Failed response
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM0NDE0NDYsImV4cCI6MTcxMzQ2MzA0Nn0.uIc3phjr1wr_gDRN16BuJ2CGqNNKugN3WW-vNsJh7pg
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
   /customer/logout:
     get:
@@ -79,15 +98,19 @@ paths:
       summary: Logout
       description: Customer logout
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             text/html:
               schema:
                 type: string
                 example: Redirect to HTML content for the Home page
-        '400':
-          description: Failed response
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
   /customer/food:
     get:
@@ -102,6 +125,7 @@ paths:
           required: true
           schema:
             type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM1Mjc0MjYsImV4cCI6MTcxMzU0OTAyNn0.OWbCY9gilukyfHVesUZwLoprQRPKqHPdb1LPF-xe7YA
         - name: category
           in: query
           description: Food category
@@ -114,7 +138,7 @@ paths:
               - drinks
               - extra food
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -127,9 +151,13 @@ paths:
                   listFood:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FoodItem'      
-        '400':
-          description: Failed response
+                      $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
   /customer/get-order:
     get:
@@ -144,20 +172,23 @@ paths:
           required: true
           schema:
             type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM1Mjc0MjYsImV4cCI6MTcxMzU0OTAyNn0.OWbCY9gilukyfHVesUZwLoprQRPKqHPdb1LPF-xe7YA
         - name: customer
           in: query
           description: Customer's name
           required: true
           schema:
             type: string
+            example: Phat
         - name: table_code
           in: query
           description: Table code
           required: true
           schema:
             type: integer
+            example: 1
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -168,13 +199,17 @@ paths:
                     type: integer
                     example: 0
                   order:
-                    $ref: '#/components/schemas/Order'
+                    $ref: "#/components/schemas/OrderItem"
                   listFood:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FoodItem'
-        '400':
-          description: Failed response
+                      $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
   /customer/order-food:
     post:
@@ -189,22 +224,15 @@ paths:
           required: true
           schema:
             type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lciI6IlBoYXQiLCJ0YWJsZV9jb2RlIjoxLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE3MTM1Mjc0MjYsImV4cCI6MTcxMzU0OTAyNn0.OWbCY9gilukyfHVesUZwLoprQRPKqHPdb1LPF-xe7YA
       requestBody:
         description: Information of order id and list food
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                orderId:
-                  type: integer
-                  example: 6620be4d35d390948ef9c9a8
-                listFoods:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/FoodItemToOrder'
+              $ref: "#/components/schemas/Order-Food"
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json:
@@ -218,14 +246,376 @@ paths:
                     type: string
                     example: Added food to order successfully
                   order:
-                    $ref: '#/components/schemas/Order'
+                    $ref: "#/components/schemas/OrderItem"
                   listFood:
                     type: array
                     items:
-                      $ref: '#/components/schemas/FoodItemToOrder'
+                      $ref: "#/components/schemas/FoodItemToOrder"
 
-        '400':
-          description: Failed response
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef:
+    post:
+      tags:
+        - Chef
+      summary: Chef user interface
+      description: Chef accesses the chef user interface
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+      requestBody:
+        description: Information of chef
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee-Information"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Employee-Information"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+                example: HTML content for the Chef interface
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/login:
+    post:
+      tags:
+        - Chef
+      summary: Login
+      description: Chef login
+      requestBody:
+        description: Information of chef
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee-Information"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Employee-Information"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Login success
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNjA3NiwiZXhwIjoxNzEzNTQ3Njc2fQ.LN_7cyDuDh0U6gKJ5BHpx5_UT4vfuo5mmo0dOY5aCYY
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/logout:
+    get:
+      tags:
+        - Chef
+      summary: Logout
+      description: Chef logout
+      responses:
+        "200":
+          description: Successful response
+          content:
+            text/html:
+              schema:
+                type: string
+                example: Redirect to HTML content for the Home page
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/food-management:
+    get:
+      tags:
+        - Chef
+      summary: Get list food
+      description: Chef manages list food
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listFood:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/set-status-food:
+    get:
+      tags:
+        - Chef
+      summary: toggle status food
+      description: Chef toggle status food
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+        - name: name
+          in: query
+          description: Food's name
+          required: true
+          schema:
+            type: string
+            example: Pizza
+        - name: status
+          in: query
+          description: Food's status
+          required: true
+          schema:
+            type: boolean
+            example: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  updatedFood:
+                    $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/orders:
+    get:
+      tags:
+        - Chef
+      summary: Get list order today
+      description: Chef takes the order list today
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listOrder:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/OrderItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/detail-order:
+    get:
+      tags:
+        - Chef
+      summary: Detail order
+      description: Chef takes the details of the order
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+        - name: orderId
+          in: query
+          description: Id of order
+          required: true
+          schema:
+            type: string
+            example: 6620f82dfc1935f322b6d0d6
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  order:
+                    $ref: "#/components/schemas/OrderItem"
+                  listFood:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/completed-order:
+    get:
+      tags:
+        - Chef
+      summary: Complete order
+      description: Chef marks the order complete
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+        - name: orderId
+          in: query
+          description: Id of order
+          required: true
+          schema:
+            type: string
+            example: 6620f82dfc1935f322b6d0d6
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: The order has been marked complete
+                  updatedOrder:
+                    $ref: "#/components/schemas/OrderItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /chef/change-password:
+    post:
+      tags:
+        - Chef
+      summary: Change Password
+      description: Chef change account password
+      parameters:
+        - name: token
+          in: query
+          description: Chef's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiQzAwMSIsIm5hbWUiOiJUYW4gVGhhbmgiLCJyb2xlIjoiY2hlZiIsImVtYWlsIjoiY3Rib25nZGVtLm5nQGdtYWlsLmNvbSIsImlhdCI6MTcxMzUyNzI3OCwiZXhwIjoxNzEzNTQ4ODc4fQ.GaLZNZ9ZB-XGQPUrt5XI9QYsQH_YAKdM5PrCI7_A_ug
+        - name: id
+          in: query
+          description: Id of employee account
+          required: true
+          schema:
+            type: string
+            example: 6609431c63278e5b966308d5
+      requestBody:
+        description: Information of passwords
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee-Passwords"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Employee-Passwords"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Change password successfully
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
 
 components:
   schemas:
@@ -250,7 +640,8 @@ components:
         status:
           type: boolean
           example: true
-    Order:
+
+    OrderItem:
       type: object
       properties:
         _id:
@@ -279,19 +670,8 @@ components:
           example: true
         timestamp:
           type: string
-          example: '2024-04-18T06:31:41.752+00:00'
-    Customer-Information:
-      type: object
-      properties:
-        customer:
-          type: string
-          example: Phat
-        table_code:
-          type: integer
-          example: 1
-        OTP:
-          type: string
-          example: g5cs
+          example: "2024-04-18T06:31:41.752+00:00"
+
     FoodItemToOrder:
       type: object
       properties:
@@ -307,3 +687,47 @@ components:
         note:
           type: string
           example: ít rau
+
+    Order-Food:
+      type: object
+      properties:
+        orderId:
+          type: integer
+          example: 6620be4d35d390948ef9c9a8
+        listFoods:
+          type: array
+          items:
+            $ref: "#/components/schemas/FoodItemToOrder"
+
+    Customer-Information:
+      type: object
+      properties:
+        customer:
+          type: string
+          example: Phat
+        table_code:
+          type: integer
+          example: 1
+        OTP:
+          type: string
+          example: g5cs
+
+    Employee-Information:
+      type: object
+      properties:
+        email:
+          type: string
+          example: ctbongdem.ng@gmail.com
+        password:
+          type: string
+          example: 066cce7bed7c645491183961563921cfffedfec33e319612cad9e720da9cb75f
+
+    Employee-Passwords:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          example: 066cce7bed7c645491183961563921cfffedfec33e319612cad9e720da9cb75f
+        newPassword:
+          type: string
+          example: f4254c3c979307134c4c48438120893aff3f8a13dd2f8e0f94acda988bdb02a4
