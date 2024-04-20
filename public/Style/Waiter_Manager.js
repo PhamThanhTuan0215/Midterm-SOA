@@ -131,7 +131,10 @@ function displayGridTable(occupiedTables) {
 
     gridContainer.innerHTML = ''
 
-    const tableQuantity = parseInt(document.getElementById('tableQuantity').value) ?? 30
+    let tableQuantity = parseInt(document.getElementById('tableQuantity').value) ?? 30
+
+    const maxOccupiedTableCode = Math.max(...occupiedTables.map(table => table.table_code));
+    tableQuantity = Math.max(tableQuantity, maxOccupiedTableCode);
 
     for (let i = 1; i <= tableQuantity; i++) {
         const gridItem = document.createElement('div');
@@ -196,7 +199,7 @@ function openTable(customer, customers_number, table_code) {
             tableCodeInput.value = 0
             customerNameInput.value = ''
             customerNumberInput.value = ''
-            alert('Successfully opened code number ' + table_code)
+            alert(json.message)
         }
         else {
             alert(json.message)
@@ -209,6 +212,7 @@ function openTable(customer, customers_number, table_code) {
 
 // payment
 const btnSearchOrder = document.getElementById('btnSearchOrder')
+const btnDeleteOrder = document.getElementById('btnDeleteOrder')
 const tableCodeInput2 = document.getElementById('table_code_2');
 const customerNameInput2 = document.getElementById('customer_2');
 const searchResultOrder = document.getElementById('searchResultOrder');
@@ -220,8 +224,36 @@ btnSearchOrder.addEventListener('click', function() {
     searchOrder(customer, table_code)
 });
 
+btnDeleteOrder.addEventListener('click', function() {
+    const table_code = tableCodeInput2.value;
+
+    deleteOrder(table_code)
+});
+
 function searchOrder(customer, table_code) {
     const url = '/waiter-manager/search-order?customer=' + customer +'&table_code=' + table_code + '&token=' + token
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(json => {
+            if (json.code == 0) {
+                displayResultOrder(json.order, json.listFood)
+            }
+            else {
+                alert(json.message)
+            }
+        })
+        .catch(error => {
+            console.error('There was a problem with your fetch operation:', error);
+        });
+}
+
+function deleteOrder(table_code) {
+    const url = '/waiter-manager/delete-order?table_code=' + table_code + '&token=' + token
     fetch(url)
         .then(response => {
             if (!response.ok) {
@@ -435,6 +467,8 @@ function displayBillsCurrentShift(listBill) {
         currentShiftTableBody.appendChild(newRow);
     });
 
+    document.getElementById('totalBillCurrentShift').innerHTML = listBill.length
+
     addClickEventsForViewBtn()
 }
 
@@ -622,6 +656,8 @@ function displayBills(listBill) {
         `;
         tableBody.appendChild(newRow);
     });
+
+    document.getElementById('totalBillHistory').innerHTML = listBill.length
 
     addClickEventsForViewBtn()
 }

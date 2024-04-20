@@ -715,6 +715,591 @@ paths:
         "500":
           description: An undefined server error occurred while processing the request
 
+  /waiter-manager/occupied-tables:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Get list occupied-tables
+      description:  Waiter and Manager get list occupied-tables
+      parameters:
+        - name: token
+          in: query
+          description: Waiter/Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  occupiedTables:
+                    type: object
+                    properties:
+                      customer:
+                        type: string
+                        example: Phat
+                      table_code:
+                        type: string
+                        example: 1
+                      OTP:
+                        type: string
+                        example: g5cs
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/new-order:
+    post:
+      tags:
+        - Waiter/Manager
+      summary: New order
+      description:  Waiter and Manager add new order
+      parameters:
+        - name: token
+          in: query
+          description: Waiter/Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+      requestBody:
+        description: Customer information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: string
+                  example: Thanh Nam
+                customers_number:
+                  type: integer
+                  example: 4
+                table_code:
+                  type: integer
+                  example: 8
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: string
+                  example: Thanh Nam
+                customers_number:
+                  type: integer
+                  example: 4
+                table_code:
+                  type: integer
+                  example: 8
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: "Opened successfully, table code: 1"
+                  order:
+                    $ref: "#/components/schemas/OrderItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/search-order:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Search order
+      description:  Waiter and Manager search order for payment
+      parameters:
+        - name: token
+          in: query
+          description: Waiter/Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: customer
+          in: query
+          description: Customer's name
+          required: true
+          schema:
+            type: string
+            example: Phat
+        - name: table_code
+          in: query
+          description: Table code
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  order:
+                    $ref: "#/components/schemas/OrderItem"
+                  listFood:
+                    type: array
+                    $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/delete-order:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Delete order
+      description:  Waiter and Manager delete order
+      parameters:
+        - name: token
+          in: query
+          description: Waiter/Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: table_code
+          in: query
+          description: Table code
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: "Delete order successfully, table code: 1"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/payment:
+    post:
+      tags:
+        - Waiter/Manager
+      summary: Payment
+      description:  Waiter and Manager pay an order
+      parameters:
+        - name: token
+          in: query
+          description: Waiter/Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+      requestBody:
+        description: Customer information
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                employeeId:
+                  type: string
+                  example: W001
+                orderId:
+                  type: string
+                  example: 662202bf50a92d4bbd75fa12
+                received:
+                  type: number
+                  example: 15.00
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                employeeId:
+                  type: string
+                  example: W001
+                orderId:
+                  type: string
+                  example: 662202bf50a92d4bbd75fa12
+                received:
+                  type: number
+                  example: 15.00
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Payment successfully
+                  refund:
+                    type: number
+                    example: 3.02
+                  bill:
+                    $ref: "#/components/schemas/BillItem"
+
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/bills-shift:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Bills current shift
+      description:  Manager get list bill in current shift
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: shift
+          in: query
+          description: Current shift
+          required: true
+          schema:
+            type: integer
+            default: 1
+            enum:
+              - 1
+              - 2
+              - 3
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listBill:
+                    type: array
+                    $ref: "#/components/schemas/BillItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/bills-date:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Bills in date
+      description:  Manager get list bill in date selected
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: startDate
+          in: query
+          description: Date start
+          required: true
+          schema:
+            type: string
+            example: 04/20/2024
+        - name: endDate
+          in: query
+          description: Date end
+          required: true
+          schema:
+            type: string
+            example: 04/25/2024
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listBill:
+                    type: array
+                    $ref: "#/components/schemas/BillItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/detail-bill:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Bill detail
+      description:  Manager get details of bill
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: billId
+          in: query
+          description: Id of bill
+          required: true
+          schema:
+            type: string
+            example: 6620c2e0a6fef6bb8bf4d4d2
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  bill:
+                    $ref: "#/components/schemas/BillItem"
+                  listFood:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/FoodItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/employees:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: List employees
+      description:  Manager get list employee account
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  listEmployee:
+                    type: array
+                    $ref: "#/components/schemas/EmployeeItem"
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/employees/add:
+    post:
+      tags:
+        - Waiter/Manager
+      summary: Add employee
+      description:  Manager add new employee account
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+      requestBody:
+        description: Information of employee account
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee-Account"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Employee-Account"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Add employee successfully
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/employees/delete:
+    get:
+      tags:
+        - Waiter/Manager
+      summary: Delete employee
+      description:  Manager delete employee account
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: id
+          in: query
+          description: Id of employee account
+          required: true
+          schema:
+            type: string
+            example: 6623a6a041eeeaa383c0ec74
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Delete employee successfully (W003)
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
+  /waiter-manager/employees/edit:
+    post:
+      tags:
+        - Waiter/Manager
+      summary: Edit employee
+      description:  Manager edit employee account
+      parameters:
+        - name: token
+          in: query
+          description: Manager's token
+          required: true
+          schema:
+            type: string
+            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbXBsb3llZUlkIjoiTTAwMSIsIm5hbWUiOiJOYW0gUGhhdCIsInJvbGUiOiJtYW5hZ2VyIiwiZW1haWwiOiJkYW5jYW11MTAwMkBnbWFpbC5jb20iLCJpYXQiOjE3MTM1ODY2NjAsImV4cCI6MTcxMzYwODI2MH0.oM9YEJDhIBaGddvYzUYqyj2fG1PBTGXmd5Kgxxatxuw
+        - name: id
+          in: query
+          description: Id of employee account
+          required: true
+          schema:
+            type: string
+            example: 6623a6a041eeeaa383c0ec74
+      requestBody:
+        description: Information of employee account
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Employee-Account"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Employee-Account"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 0
+                  message:
+                    type: string
+                    example: Update employee successfully
+        "400":
+          description: The server cannot understand the request due to a syntax error or invalid data from the client
+        "404":
+          description: The requested resource could not be found on the server
+        "500":
+          description: An undefined server error occurred while processing the request
+
   /waiter-manager/change-password:
     post:
       tags:
@@ -821,6 +1406,62 @@ components:
           type: string
           example: "2024-04-18T06:31:41.752+00:00"
 
+    BillItem:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 6620c2e0a6fef6bb8bf4d4d2
+        employeeId:
+          type: string
+          example: W001
+        customer:
+          type: string
+          example: Quoc Kien
+        table_code:
+          type: integer
+          example: 1
+        orderId:
+          type: string
+          example: 6620be4d35d390948ef9c9a8
+        total_price:
+          type: number
+          example: 26.75
+        received:
+          type: number
+          example: 30
+        refund:
+          type: number
+          example: 3.25
+        date:
+          type: string
+          example: 04/18/2024
+        shift:
+          type: integer
+          example: 2
+
+    EmployeeItem:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 660942e963278e5b966308d3
+        employeeId:
+          type: string
+          example: M001
+        name:
+          type: string
+          example: Nam Phat
+        role:
+          type: string
+          example: manager
+        email:
+          type: string
+          example: dancamu1002@gmail.com
+        password:
+          type: string
+          example: 066cce7bed7c645491183961563921cfffedfec33e319612cad9e720da9cb75f
+
     FoodItemToOrder:
       type: object
       properties:
@@ -867,6 +1508,25 @@ components:
         email:
           type: string
           example: ctbongdem.ng@gmail.com
+        password:
+          type: string
+          example: 066cce7bed7c645491183961563921cfffedfec33e319612cad9e720da9cb75f
+
+    Employee-Account:
+      type: object
+      properties:
+        employeeId:
+          type: string
+          example: W003
+        name:
+          type: string
+          example: Nhat Hung
+        role:
+          type: string
+          example: waiter
+        email:
+          type: string
+          example: nhathung@gmail.com
         password:
           type: string
           example: 066cce7bed7c645491183961563921cfffedfec33e319612cad9e720da9cb75f

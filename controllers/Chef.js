@@ -12,8 +12,12 @@ const connections = require('../notification/connections')
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
-    if (!email || !password) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
+    }
+
+    if (!password) {
+        return res.json({ code: 1, message: "Please provide password" })
     }
 
     Employee.findOne({ email, role: 'chef'})
@@ -38,8 +42,12 @@ module.exports.login = (req, res) => {
 
     const { email, password } = req.body
 
-    if (!email || !password) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
+    }
+
+    if (!password) {
+        return res.json({ code: 1, message: "Please provide password" })
     }
 
     Employee.findOne({ email, role: 'chef' })
@@ -82,8 +90,12 @@ module.exports.set_status_food = (req, res) => {
 
     const { name, status } = req.query
 
-    if (!name || !status) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!name) {
+        return res.json({ code: 1, message: "Please provide food name" })
+    }
+
+    if (!status) {
+        return res.json({ code: 1, message: "Please provide food status" })
     }
 
     Food.findOneAndUpdate(
@@ -137,7 +149,7 @@ module.exports.detail_order = (req, res) => {
     const orderId = req.query.orderId
 
     if (!orderId) {
-        return res.json({ code: 1, message: "Lack of information" })
+        return res.json({ code: 1, message: "Please provide order Id" })
     }
 
     Order.findById(orderId)
@@ -164,7 +176,7 @@ module.exports.set_completed_order = (req, res) => {
     const { orderId } = req.query
 
     if (!orderId) {
-        return res.json({ code: 1, message: "Lack of information" })
+        return res.json({ code: 1, message: "Please provide order Id" })
     }
 
     OrderDetail.updateMany(

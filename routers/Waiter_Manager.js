@@ -23,6 +23,8 @@ Router.post('/new-order', Waiter_Manager_Verify, WaiterController.add_new_order)
 
 Router.get('/search-order', Waiter_Manager_Verify, WaiterController.get_order)
 
+Router.get('/delete-order', Waiter_Manager_Verify, WaiterController.delete_order)
+
 Router.post('/payment', Waiter_Manager_Verify, WaiterController.payment)
 
 Router.get('/bills-shift/', Manager_Verify, ManagerController.get_bill_by_shift)

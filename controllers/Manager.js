@@ -39,7 +39,7 @@ module.exports.get_bill_by_shift = (req, res) => {
     const shift = req.query.shift
 
     if (!shift) {
-        return res.json({ code: 1, message: "Lack of information" })
+        return res.json({ code: 1, message: "Please provide shift" })
     }
 
     let currentDate = new Date()
@@ -59,8 +59,12 @@ module.exports.get_bill_by_date = (req, res) => {
 
     let { startDate, endDate } = req.query
 
-    if (!startDate || !endDate) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!startDate) {
+        return res.json({ code: 1, message: "Please provide start date" })
+    }
+
+    if (!endDate) {
+        return res.json({ code: 1, message: "Please provide end date" })
     }
 
     const dateRegex = /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/\d{4}$/;
@@ -88,7 +92,7 @@ module.exports.get_detail_bill = (req, res) => {
     const billId = req.query.billId
 
     if (!billId) {
-        return res.json({ code: 1, message: "Lack of information" })
+        return res.json({ code: 1, message: "Please provide bill Id" })
     }
 
     Bill.findById(billId)
@@ -117,8 +121,24 @@ module.exports.get_list_employee = (req, res) => {
 module.exports.add_employee = (req, res) => {
     const { employeeId, name, role, email, password } = req.body
 
-    if (!employeeId || !name || !role || !email || !password) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!employeeId) {
+        return res.json({ code: 1, message: "Please provide employee Id" })
+    }
+
+    if (!name) {
+        return res.json({ code: 1, message: "Please provide name" })
+    }
+
+    if (!role) {
+        return res.json({ code: 1, message: "Please provide role" })
+    }
+
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
+    }
+
+    if (!password) {
+        return res.json({ code: 1, message: "Please provide password" })
     }
 
     if (name.length < 4) {
@@ -165,7 +185,7 @@ module.exports.delete_employee = (req, res) => {
     const id = req.query.id
 
     if (!id) {
-        return res.json({ code: 1, message: "Please provide employee id" })
+        return res.json({ code: 1, message: "Please provide account Id" })
     }
 
     Employee.findByIdAndDelete(id)
@@ -174,7 +194,7 @@ module.exports.delete_employee = (req, res) => {
                 return res.json({ code: 1, message: "Id not found" })
             }
 
-            return res.json({ code: 0, message: "Delete employee successfully", employeeId: employee.employeeId })
+            return res.json({ code: 0, message: `Delete employee successfully (${employee.employeeId})` })
         })
         .catch(e => {
             if (e.message.includes('Cast to ObjectId failed')) {
@@ -189,7 +209,23 @@ module.exports.edit_employee = (req, res) => {
     const { employeeId, name, email, role } = req.body
 
     if (!id) {
-        return res.json({ code: 1, message: "Please provide employee id" })
+        return res.json({ code: 1, message: "Please provide account Id" })
+    }
+
+    if (!employeeId) {
+        return res.json({ code: 1, message: "Please provide employee Id" })
+    }
+
+    if (!name) {
+        return res.json({ code: 1, message: "Please provide name" })
+    }
+
+    if (!role) {
+        return res.json({ code: 1, message: "Please provide role" })
+    }
+
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
     }
 
     if (name && name.length < 4) {

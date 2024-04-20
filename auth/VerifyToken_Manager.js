@@ -25,6 +25,7 @@ module.exports = (req, res, next) => {
                     return res.json({ code: 1, message: "This token has no access rights, you are not a manager" })
                 }
                 else {
+                    req.dataToken = data
                     next()
                 }
             }

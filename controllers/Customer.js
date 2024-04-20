@@ -12,8 +12,12 @@ module.exports.home = (req, res) => {
 
     const {customer, table_code} = req.body
 
-    if (!customer || !table_code) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!customer) {
+        return res.json({ code: 1, message: "Please provide customer name" })
+    }
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -33,8 +37,16 @@ module.exports.home = (req, res) => {
 module.exports.login = (req, res) => {
     const {customer, table_code, OTP} = req.body
 
-    if (!customer || !table_code || !OTP) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!customer) {
+        return res.json({ code: 1, message: "Please provide customer name" })
+    }
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
+    }
+
+    if (!OTP) {
+        return res.json({ code: 1, message: "Please provide OTP code" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -66,8 +78,12 @@ module.exports.logout = (req, res) => {
 module.exports.get_order = (req, res) => {
     const {customer, table_code} = req.query
 
-    if (!customer || !table_code) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!customer) {
+        return res.json({ code: 1, message: "Please provide customer name" })
+    }
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -94,7 +110,7 @@ module.exports.get_by_category = (req, res) => {
     const category = req.query.category
 
     if (!category) {
-        return res.json({ code: 1, message: "Lack of information" })
+        return res.json({ code: 1, message: "Please provide category" })
     }
 
     Food.find({ category: category })
@@ -109,8 +125,12 @@ module.exports.get_by_category = (req, res) => {
 module.exports.add_foods_into_order = (req, res) => {
     const {orderId, listFoods} = req.body
 
-    if (!orderId || !listFoods) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!orderId) {
+        return res.json({ code: 1, message: "Please provide order Id" })
+    }
+
+    if (!listFoods) {
+        return res.json({ code: 1, message: "Please provide list food" })
     }
 
     let totalPrice = 0
@@ -127,21 +147,24 @@ module.exports.add_foods_into_order = (req, res) => {
         };
     });
 
-    OrderDetail.insertMany(detailOrders)
-    .then(() => {
-        return Order.findById(orderId)
+    Order.findById(orderId)
         .then(order => {
-            order.total_price += totalPrice
-            order.status_completed = false
-            order.status_check = false
-            order.save()
+            if(order) {
+                OrderDetail.insertMany(detailOrders)
+                order.total_price += totalPrice
+                order.status_completed = false
+                order.status_check = false
+                order.save()
+                
+                connections.sentOrderToChef()
 
-            connections.sentOrderToChef()
-            
-            res.json({ code: 0, message: 'Added food to order successfully', order, listFood: listFoods })
+                return res.json({ code: 0, message: 'Added food to order successfully', order, listFood: listFoods })
+            }
+            else {
+                res.json({ code: 1, message: 'Order not found' })
+            }
         })
-    })
-    .catch(error => {
-        res.json({ code: 1, message: 'Added food to order failed' })
-    });
+        .catch(error => {
+            res.json({ code: 1, message: 'Added food to order failed' })
+        });
 }

@@ -12,8 +12,12 @@ const connections = require('../notification/connections')
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
-    if (!email || !password) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
+    }
+
+    if (!password) {
+        return res.json({ code: 1, message: "Please provide password" })
     }
 
     Employee.findOne({ email, $or: [{ role: 'waiter' }, { role: 'manager' }] })
@@ -38,8 +42,12 @@ module.exports.login = (req, res) => {
 
     const { email, password } = req.body
 
-    if (!email || !password) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!email) {
+        return res.json({ code: 1, message: "Please provide email" })
+    }
+
+    if (!password) {
+        return res.json({ code: 1, message: "Please provide password" })
     }
 
     Employee.findOne({ email, $or: [{ role: 'waiter' }, { role: 'manager' }] })
@@ -82,26 +90,38 @@ module.exports.get_occupied_tables = (req, res) => {
 module.exports.add_new_order = (req, res) => {
     const {customer, customers_number, table_code} = req.body
 
-    if (!customer || !customers_number || !table_code) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if(!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
+    if (!customer) {
+        return res.json({ code: 1, message: "Please provide customer name" })
+    }
+
+    if (!customers_number) {
+        return res.json({ code: 1, message: "Please provide number of customer" })
+    }
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
     }
 
     if(customers_number < 1) {
         return res.json({ code: 1, message: "Invalid customer number" })
     }
 
-    Order.findOne({customer, table_code, status_payment: false})
+    Order.findOne({table_code, status_payment: false})
         .then(o => {
             if(!o) {
                 const OTP = generateRandomString(4);
 
                 let order = new Order({
-                    employeeId: req.session.employee.employeeId, customer, customers_number, table_code, OTP
+                    employeeId: req.dataToken.employeeId, customer, customers_number, table_code, OTP
                 })
             
                 order.save()
                     .then(() => {
-                        return res.json({ code: 0, orderId: order._id })
+                        return res.json({ code: 0, message: "Opened successfully, table code: " + table_code , order })
                     })
             }
             else {
@@ -117,8 +137,12 @@ module.exports.get_order = (req, res) => {
 
     const {customer, table_code} = req.query
 
-    if (!customer || !table_code) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if (!customer) {
+        return res.json({ code: 1, message: "Please provide customer name" })
+    }
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -140,12 +164,55 @@ module.exports.get_order = (req, res) => {
         });
 }
 
-module.exports.payment = async (req, res) => {
+module.exports.delete_order = (req, res) => {
+
+    const {table_code} = req.query
+
+    if (!table_code) {
+        return res.json({ code: 1, message: "Please provide table code" })
+    }
+
+    Order.findOne({table_code, status_payment: false})
+        .then(order => {
+            if (!order) {
+                return res.json({ code: 1, message: "Order not found or has been paid" });
+            }
+            if(order.total_price > 0) {
+                return res.json({ code: 1, message: "The customer has ordered" })
+            }
+
+            order.deleteOne()
+                .then(() => {
+                    return res.json({ code: 1, message: "Delete order successfully" });
+                })
+        })
+        .catch(err => {
+            return res.json({ code: 1, message: "Failed to delete order" });
+        });
+}
+
+module.exports.payment = (req, res) => {
 
     const {employeeId, orderId, received} = req.body
 
-    if (!employeeId || !orderId || !received) {
-        return res.json({ code: 1, message: "Lack of information" })
+    if(!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
+    if (!employeeId) {
+        return res.json({ code: 1, message: "Please provide employee Id" })
+    }
+
+    if (!orderId) {
+        return res.json({ code: 1, message: "Please provide order Id" })
+    }
+
+    if (!received) {
+        return res.json({ code: 1, message: "Please provide received" })
+    }
+
+    if(employeeId !== req.dataToken.employeeId) {
+        return res.json({ code: 1, message: "Employee Id does not match" })
     }
 
     Order.findById(orderId)
