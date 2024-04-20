@@ -46,7 +46,7 @@ module.exports.get_bill_by_shift = (req, res) => {
     currentDate = formatDateString(currentDate.toLocaleDateString());
 
 
-    Bill.find({shift, date: currentDate})
+    Bill.find({ shift, date: currentDate })
         .then(listBill => {
             return res.json({ code: 0, listBill })
         })
@@ -57,10 +57,16 @@ module.exports.get_bill_by_shift = (req, res) => {
 
 module.exports.get_bill_by_date = (req, res) => {
 
-    let {startDate, endDate} = req.query
+    let { startDate, endDate } = req.query
 
     if (!startDate || !endDate) {
         return res.json({ code: 1, message: "Lack of information" })
+    }
+
+    const dateRegex = /^(0?[1-9]|1[0-2])\/(0?[1-9]|[12]\d|3[01])\/\d{4}$/;
+
+    if (!dateRegex.test(startDate) || !dateRegex.test(endDate)) {
+        return res.json({ code: 1, message: "Invalid date format, date format should be (MM/DD/YYYY, M/DD/YYYY, MM/D/YYYY)" });
     }
 
     fromDate = new Date(startDate);
@@ -70,12 +76,12 @@ module.exports.get_bill_by_date = (req, res) => {
     dateCondition = { date: { $gte: fromDate, $lte: toDate } };
 
     Bill.find(dateCondition)
-    .then(listBill => {
-        return res.json({ code: 0, listBill })
-    })
-    .catch(err => {
-        return res.json({ code: 1, message: "Search bills failed" })
-    })
+        .then(listBill => {
+            return res.json({ code: 0, listBill })
+        })
+        .catch(err => {
+            return res.json({ code: 1, message: "Search bills failed" })
+        })
 }
 
 module.exports.get_detail_bill = (req, res) => {
@@ -86,45 +92,45 @@ module.exports.get_detail_bill = (req, res) => {
     }
 
     Bill.findById(billId)
-    .then(bill => {
-        OrderDetail.find({ orderId: bill.orderId })
-        .then(listFood => {
-            return res.json({ code: 0, bill, listFood });
+        .then(bill => {
+            OrderDetail.find({ orderId: bill.orderId })
+                .then(listFood => {
+                    return res.json({ code: 0, bill, listFood });
+                })
         })
-    })
-    .catch(err => {
-        return res.json({ code: 1, message: "Search bill failed" })
-    })
+        .catch(err => {
+            return res.json({ code: 1, message: "Search bill failed" })
+        })
 }
 
 module.exports.get_list_employee = (req, res) => {
 
     Employee.find()
-    .then(listEmployee => {
-        return res.json({ code: 0, listEmployee })
-    })
-    .catch(err => {
-        return res.json({ code: 1, message: "Search accounts failed" })
-    })
+        .then(listEmployee => {
+            return res.json({ code: 0, listEmployee })
+        })
+        .catch(err => {
+            return res.json({ code: 1, message: "Search accounts failed" })
+        })
 }
 
 module.exports.add_employee = (req, res) => {
-    const {employeeId, name, role, email, password} = req.body
+    const { employeeId, name, role, email, password } = req.body
 
     if (!employeeId || !name || !role || !email || !password) {
         return res.json({ code: 1, message: "Lack of information" })
     }
 
-    if(name.length < 4) {
+    if (name.length < 4) {
         return res.json({ code: 1, message: "Name is too short" });
     }
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(!emailRegex.test(email)) {
+    if (!emailRegex.test(email)) {
         return res.json({ code: 1, message: "Invalid email" });
     }
 
-    if(!(role == 'waiter' || role == 'manager' || role == 'chef')) {
+    if (!(role == 'waiter' || role == 'manager' || role == 'chef')) {
         return res.json({ code: 1, message: "Invalid role" });
     }
 
@@ -158,14 +164,14 @@ module.exports.add_employee = (req, res) => {
 module.exports.delete_employee = (req, res) => {
     const id = req.query.id
 
-    if(!id) {
+    if (!id) {
         return res.json({ code: 1, message: "Please provide employee id" })
     }
 
     Employee.findByIdAndDelete(id)
         .then(employee => {
-            if(!employee) {
-                return res.json({ code: 1, message: "Id not found"})
+            if (!employee) {
+                return res.json({ code: 1, message: "Id not found" })
             }
 
             return res.json({ code: 0, message: "Delete employee successfully", employeeId: employee.employeeId })
@@ -180,22 +186,22 @@ module.exports.delete_employee = (req, res) => {
 
 module.exports.edit_employee = (req, res) => {
     const id = req.query.id
-    const {employeeId, name, email, role} = req.body
+    const { employeeId, name, email, role } = req.body
 
-    if(!id) {
+    if (!id) {
         return res.json({ code: 1, message: "Please provide employee id" })
     }
 
-    if(name && name.length < 4) {
+    if (name && name.length < 4) {
         return res.json({ code: 1, message: "Name is too short" });
     }
-    
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if(email && !emailRegex.test(email)) {
+    if (email && !emailRegex.test(email)) {
         return res.json({ code: 1, message: "Invalid email" });
     }
 
-    if(role && !(role == 'waiter' || role == 'manager' || role == 'chef')) {
+    if (role && !(role == 'waiter' || role == 'manager' || role == 'chef')) {
         return res.json({ code: 1, message: "Invalid role" });
     }
 
@@ -213,47 +219,47 @@ module.exports.edit_employee = (req, res) => {
     Employee.findById(id)
         .then(employee => {
 
-            if(!employee) {
-                return res.json({ code: 1, message: "Id not found"})
+            if (!employee) {
+                return res.json({ code: 1, message: "Id not found" })
             }
 
-            if(employeeId && role) {
-                if(!validateEmployeeId(employeeId, role)) {
-                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role"})
+            if (employeeId && role) {
+                if (!validateEmployeeId(employeeId, role)) {
+                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role" })
                 }
             }
-            else if(employeeId && (!role)) {
-                if(!validateEmployeeId(employeeId, employee.role)) {
-                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role"})
+            else if (employeeId && (!role)) {
+                if (!validateEmployeeId(employeeId, employee.role)) {
+                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role" })
                 }
             }
-            else if((!employeeId) && role) {
-                if(!validateEmployeeId(employee.employeeId, role)) {
-                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role"})
+            else if ((!employeeId) && role) {
+                if (!validateEmployeeId(employee.employeeId, role)) {
+                    return res.json({ code: 1, message: "Invalid employeeId format for the specified role" })
                 }
             }
-            
-            if(employeeId) employee.employeeId = employeeId
-                if(name) employee.name = name
-                if(email) employee.email = email
-                if(role) employee.role = role
 
-                employee.save()
-                    .then(() => {
-                        return res.json({ code: 0, message: 'Update employee successfully' })
-                    })
-                    .catch(e => {
-                        if (e.message.includes('employeeId')) {
-                            return res.json({ code: 1, message: 'Employee Id already exists' })
-                        }
-                        else if (e.message.includes('name')) {
-                            return res.json({ code: 1, message: 'Name already exists' })
-                        }
-                        else if (e.message.includes('email')) {
-                            return res.json({ code: 1, message: 'Email already exists' })
-                        }
-                        return res.json({ code: 1, message: "Update failed, An error has occurred" })
-                    })
+            if (employeeId) employee.employeeId = employeeId
+            if (name) employee.name = name
+            if (email) employee.email = email
+            if (role) employee.role = role
+
+            employee.save()
+                .then(() => {
+                    return res.json({ code: 0, message: 'Update employee successfully' })
+                })
+                .catch(e => {
+                    if (e.message.includes('employeeId')) {
+                        return res.json({ code: 1, message: 'Employee Id already exists' })
+                    }
+                    else if (e.message.includes('name')) {
+                        return res.json({ code: 1, message: 'Name already exists' })
+                    }
+                    else if (e.message.includes('email')) {
+                        return res.json({ code: 1, message: 'Email already exists' })
+                    }
+                    return res.json({ code: 1, message: "Update failed, An error has occurred" })
+                })
 
         })
         .catch(e => {
