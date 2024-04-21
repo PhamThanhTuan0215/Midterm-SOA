@@ -12,12 +12,24 @@ const connections = require('../notification/connections')
 module.exports.home = (req, res) => {
     const { email, password } = req.body
 
+    if(!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
     if (!email) {
         return res.json({ code: 1, message: "Please provide email" })
     }
 
     if (!password) {
         return res.json({ code: 1, message: "Please provide password" })
+    }
+
+    if(req.dataToken.email !== email) {
+        return res.json({ code: 1, message: "Email does not match" })
+    }
+
+    if(req.dataToken.password !== password) {
+        return res.json({ code: 1, message: "Password does not match" })
     }
 
     Employee.findOne({ email, role: 'chef'})
@@ -201,6 +213,6 @@ module.exports.set_completed_order = (req, res) => {
                 })
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Failed to update order" });
+            return res.json({ code: 1, message: "Failed to set completed order" });
         });
 }

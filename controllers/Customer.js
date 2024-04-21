@@ -12,12 +12,24 @@ module.exports.home = (req, res) => {
 
     const {customer, table_code} = req.body
 
+    if (!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
     if (!customer) {
         return res.json({ code: 1, message: "Please provide customer name" })
     }
 
     if (!table_code) {
         return res.json({ code: 1, message: "Please provide table code" })
+    }
+
+    if (req.dataToken.customer !== customer) {
+        return res.json({ code: 1, message: "Customer name does not match" })
+    }
+
+    if (req.dataToken.table_code != table_code) {
+        return res.json({ code: 1, message: "Table code does not match" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -60,7 +72,7 @@ module.exports.login = (req, res) => {
             }
 
             req.session.order = order
-            const token = createTokenCustomer(customer, table_code)
+            const token = createTokenCustomer(customer, table_code, order._id)
             req.session.token = token
             return res.json({ code: 0, message: "Login success", token});
         })
@@ -78,12 +90,24 @@ module.exports.logout = (req, res) => {
 module.exports.get_order = (req, res) => {
     const {customer, table_code} = req.query
 
+    if (!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
     if (!customer) {
         return res.json({ code: 1, message: "Please provide customer name" })
     }
 
     if (!table_code) {
         return res.json({ code: 1, message: "Please provide table code" })
+    }
+
+    if (req.dataToken.customer !== customer) {
+        return res.json({ code: 1, message: "Customer name does not match" })
+    }
+
+    if (req.dataToken.table_code != table_code) {
+        return res.json({ code: 1, message: "Table code does not match" })
     }
 
     Order.findOne({customer, table_code, status_payment: false})
@@ -125,6 +149,10 @@ module.exports.get_by_category = (req, res) => {
 module.exports.add_foods_into_order = (req, res) => {
     const {orderId, listFoods} = req.body
 
+    if (!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
     if (!orderId) {
         return res.json({ code: 1, message: "Please provide order Id" })
     }
@@ -133,9 +161,28 @@ module.exports.add_foods_into_order = (req, res) => {
         return res.json({ code: 1, message: "Please provide list food" })
     }
 
+    if(req.dataToken.orderId !== orderId) {
+        return res.json({ code: 1, message: "Order Id does not match" })
+    }
+
+    let error = false
+
     let totalPrice = 0
     const detailOrders = listFoods.map(food => {
         const { name, quantity, totalPrice: foodTotalPrice, note } = food
+
+        if(!name || !quantity || !foodTotalPrice) {
+            error = true
+        }
+
+        if (!(typeof quantity === 'number' && quantity > 0)) {
+            error = true
+        }
+
+        if (!(typeof foodTotalPrice === 'number' && foodTotalPrice > 0)) {
+            error = true
+        }
+
         totalPrice += foodTotalPrice
 
         return {
@@ -146,6 +193,10 @@ module.exports.add_foods_into_order = (req, res) => {
             note: note
         };
     });
+
+    if(error) {
+        return res.json({ code: 1, message: 'FoodItem is not in the correct format' })
+    }
 
     Order.findById(orderId)
         .then(order => {

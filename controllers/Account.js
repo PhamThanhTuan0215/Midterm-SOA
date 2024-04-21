@@ -4,8 +4,16 @@ module.exports.change_password = (req, res) => {
     const id = req.query.id
     const {oldPassword, newPassword} = req.body
 
+    if(!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
+
     if(!id) {
-        return res.json({ code: 1, message: "Please provide employee id" })
+        return res.json({ code: 1, message: "Please provide employee Id" })
+    }
+
+    if(req.dataToken.accountId !== id) {
+        return res.json({ code: 1, message: "Account Id does not match" })
     }
 
     if(!oldPassword) {

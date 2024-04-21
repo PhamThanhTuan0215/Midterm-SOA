@@ -9,8 +9,14 @@ const { addToExpiredList } = require('../auth/expiredTokenList')
 
 const connections = require('../notification/connections')
 
+const sendBill = require('../email/sendBill')
+
 module.exports.home = (req, res) => {
     const { email, password } = req.body
+
+    if(!req.dataToken) {
+        return res.json({ code: 1, message: "Token not found" })
+    }
 
     if (!email) {
         return res.json({ code: 1, message: "Please provide email" })
@@ -18,6 +24,14 @@ module.exports.home = (req, res) => {
 
     if (!password) {
         return res.json({ code: 1, message: "Please provide password" })
+    }
+
+    if(req.dataToken.email !== email) {
+        return res.json({ code: 1, message: "Email does not match" })
+    }
+
+    if(req.dataToken.password !== password) {
+        return res.json({ code: 1, message: "Password does not match" })
     }
 
     Employee.findOne({ email, $or: [{ role: 'waiter' }, { role: 'manager' }] })
@@ -88,9 +102,9 @@ module.exports.get_occupied_tables = (req, res) => {
 }
 
 module.exports.add_new_order = (req, res) => {
-    const {customer, customers_number, table_code} = req.body
+    const { customer, customers_number, table_code } = req.body
 
-    if(!req.dataToken) {
+    if (!req.dataToken) {
         return res.json({ code: 1, message: "Token not found" })
     }
 
@@ -106,22 +120,22 @@ module.exports.add_new_order = (req, res) => {
         return res.json({ code: 1, message: "Please provide table code" })
     }
 
-    if(customers_number < 1) {
+    if (customers_number < 1) {
         return res.json({ code: 1, message: "Invalid customer number" })
     }
 
-    Order.findOne({table_code, status_payment: false})
+    Order.findOne({ table_code, status_payment: false })
         .then(o => {
-            if(!o) {
+            if (!o) {
                 const OTP = generateRandomString(4);
 
                 let order = new Order({
                     employeeId: req.dataToken.employeeId, customer, customers_number, table_code, OTP
                 })
-            
+
                 order.save()
                     .then(() => {
-                        return res.json({ code: 0, message: "Opened successfully, table code: " + table_code , order })
+                        return res.json({ code: 0, message: "Opened successfully, table code: " + table_code, order })
                     })
             }
             else {
@@ -135,7 +149,7 @@ module.exports.add_new_order = (req, res) => {
 
 module.exports.get_order = (req, res) => {
 
-    const {customer, table_code} = req.query
+    const { customer, table_code } = req.query
 
     if (!customer) {
         return res.json({ code: 1, message: "Please provide customer name" })
@@ -145,12 +159,12 @@ module.exports.get_order = (req, res) => {
         return res.json({ code: 1, message: "Please provide table code" })
     }
 
-    Order.findOne({customer, table_code, status_payment: false})
+    Order.findOne({ customer, table_code, status_payment: false })
         .then(order => {
             if (!order) {
                 return res.json({ code: 1, message: "Order not found or has been paid" });
             }
-            if(order.status_completed === false) {
+            if (order.status_completed === false) {
                 return res.json({ code: 1, message: "Order not completed" })
             }
 
@@ -166,18 +180,18 @@ module.exports.get_order = (req, res) => {
 
 module.exports.delete_order = (req, res) => {
 
-    const {table_code} = req.query
+    const { table_code } = req.query
 
     if (!table_code) {
         return res.json({ code: 1, message: "Please provide table code" })
     }
 
-    Order.findOne({table_code, status_payment: false})
+    Order.findOne({ table_code, status_payment: false })
         .then(order => {
             if (!order) {
                 return res.json({ code: 1, message: "Order not found or has been paid" });
             }
-            if(order.total_price > 0) {
+            if (order.total_price > 0) {
                 return res.json({ code: 1, message: "The customer has ordered" })
             }
 
@@ -193,9 +207,9 @@ module.exports.delete_order = (req, res) => {
 
 module.exports.payment = (req, res) => {
 
-    const {employeeId, orderId, received} = req.body
+    const { employeeId, orderId, received } = req.body
 
-    if(!req.dataToken) {
+    if (!req.dataToken) {
         return res.json({ code: 1, message: "Token not found" })
     }
 
@@ -211,7 +225,7 @@ module.exports.payment = (req, res) => {
         return res.json({ code: 1, message: "Please provide received" })
     }
 
-    if(employeeId !== req.dataToken.employeeId) {
+    if (employeeId !== req.dataToken.employeeId) {
         return res.json({ code: 1, message: "Employee Id does not match" })
     }
 
@@ -220,10 +234,10 @@ module.exports.payment = (req, res) => {
             if (!order) {
                 return res.json({ code: 1, message: "Order not found" });
             }
-            if(order.status_completed === false) {
+            if (order.status_completed === false) {
                 res.json({ code: 1, message: "Order not completed" })
             }
-            else if(order.status_payment === true) {
+            else if (order.status_payment === true) {
                 res.json({ code: 1, message: "Order has been paid" })
             }
             else {
@@ -232,7 +246,7 @@ module.exports.payment = (req, res) => {
                 const receivedAmount = parseFloat(received).toFixed(2);
                 const refundAmount = receivedAmount - order.total_price;
 
-                if(refundAmount < 0) {
+                if (refundAmount < 0) {
                     return res.json({ code: 1, message: "Balance not enough" });
                 }
 
@@ -258,7 +272,14 @@ module.exports.payment = (req, res) => {
 
                         connections.completedPaymentToCustomer(order._id)
 
-                        return res.json({ code: 0, message: "Payment successfully", refund: refundAmount, bill: bill});
+                        OrderDetail.find({ orderId: bill.orderId })
+                            .then(listFood => {
+                                sendBill(bill, listFood, req.dataToken.email)
+                            }).catch(error => {
+                                console.log("Send bill to email failed")
+                            });
+                            
+                        return res.json({ code: 0, message: "Payment successfully", refund: refundAmount, bill: bill });
                     })
             }
         })
