@@ -82,7 +82,6 @@ module.exports.login = (req, res) => {
 }
 
 module.exports.logout = (req, res) => {
-    addToExpiredList(req.session.token)
     req.session.destroy()
     res.redirect('/')
 }
