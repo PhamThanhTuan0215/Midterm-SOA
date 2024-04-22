@@ -10,7 +10,7 @@ const connections = require('../notification/connections')
 
 module.exports.home = (req, res) => {
 
-    const {customer, table_code} = req.body
+    const { customer, table_code } = req.body
 
     if (!req.dataToken) {
         return res.json({ code: 1, message: "Token not found" })
@@ -32,22 +32,22 @@ module.exports.home = (req, res) => {
         return res.json({ code: 1, message: "Table code does not match" })
     }
 
-    Order.findOne({customer, table_code, status_payment: false})
-    .then(order => {
-        if (!order) {
-            return res.json({ code: 1, message: "Order has not been created yet" });
-        }
+    Order.findOne({ customer, table_code, status_payment: false })
+        .then(order => {
+            if (!order) {
+                return res.json({ code: 1, message: "Order has not been created yet" });
+            }
 
-        const token = req.query.token
-        res.render('Customer', {customer, table_code, orderId: order._id, token})
-    })
-    .catch(err => {
-        return res.json({ code: 1, message: "Login Failed" });
-    });
+            const token = req.query.token
+            res.render('Customer', { customer, table_code, orderId: order._id, token })
+        })
+        .catch(err => {
+            return res.json({ code: 1, message: "Login Failed" });
+        });
 }
 
 module.exports.login = (req, res) => {
-    const {customer, table_code, OTP} = req.body
+    const { customer, table_code, OTP } = req.body
 
     if (!customer) {
         return res.json({ code: 1, message: "Please provide customer name" })
@@ -61,23 +61,23 @@ module.exports.login = (req, res) => {
         return res.json({ code: 1, message: "Please provide OTP code" })
     }
 
-    Order.findOne({customer, table_code, status_payment: false})
+    Order.findOne({ customer, table_code, status_payment: false })
         .then(order => {
             if (!order) {
                 return res.json({ code: 1, message: "Order has not been created yet" });
             }
 
-            if(order.OTP !== OTP) {
+            if (order.OTP !== OTP) {
                 return res.json({ code: 1, message: "Incorrect OTP code" });
             }
 
             req.session.order = order
             const token = createTokenCustomer(customer, table_code, order._id)
             req.session.token = token
-            return res.json({ code: 0, message: "Login success", token});
+            return res.json({ code: 0, message: "Login success", token });
         })
         .catch(err => {
-            return res.json({ code: 1, message: "Login Failed"});
+            return res.json({ code: 1, message: "Login Failed" });
         });
 }
 
@@ -87,7 +87,7 @@ module.exports.logout = (req, res) => {
 }
 
 module.exports.get_order = (req, res) => {
-    const {customer, table_code} = req.query
+    const { customer, table_code } = req.query
 
     if (!req.dataToken) {
         return res.json({ code: 1, message: "Token not found" })
@@ -109,7 +109,7 @@ module.exports.get_order = (req, res) => {
         return res.json({ code: 1, message: "Table code does not match" })
     }
 
-    Order.findOne({customer, table_code, status_payment: false})
+    Order.findOne({ customer, table_code, status_payment: false })
         .then(order => {
             if (!order) {
                 return res.json({ code: 1, message: "Order not found" });
@@ -120,9 +120,9 @@ module.exports.get_order = (req, res) => {
                 { $addFields: { sortValue: { $cond: { if: { $eq: ['$status', true] }, then: 0, else: 1 } } } },
                 { $sort: { sortValue: 1 } }
             ])
-            .then(listFood => {
-                return res.json({ code: 0, order, listFood });
-            })
+                .then(listFood => {
+                    return res.json({ code: 0, order, listFood });
+                })
         })
         .catch(err => {
             return res.json({ code: 1, message: "Failed to get order" });
@@ -145,8 +145,8 @@ module.exports.get_by_category = (req, res) => {
         });
 }
 
-module.exports.add_foods_into_order = (req, res) => {
-    const {orderId, listFoods} = req.body
+module.exports.add_foods_into_order = async (req, res) => {
+    const { orderId, listFoods } = req.body
 
     if (!req.dataToken) {
         return res.json({ code: 1, message: "Token not found" })
@@ -160,17 +160,19 @@ module.exports.add_foods_into_order = (req, res) => {
         return res.json({ code: 1, message: "Please provide list food" })
     }
 
-    if(req.dataToken.orderId !== orderId) {
+    if (req.dataToken.orderId !== orderId) {
         return res.json({ code: 1, message: "Order Id does not match" })
     }
 
     let error = false
 
+    let foodNames = [];
+
     let totalPrice = 0
     const detailOrders = listFoods.map(food => {
         const { name, quantity, totalPrice: foodTotalPrice, note } = food
 
-        if(!name || !quantity || !foodTotalPrice) {
+        if (!name || !quantity || !foodTotalPrice) {
             error = true
         }
 
@@ -181,6 +183,8 @@ module.exports.add_foods_into_order = (req, res) => {
         if (!(typeof foodTotalPrice === 'number' && foodTotalPrice > 0)) {
             error = true
         }
+
+        foodNames.push(name)
 
         totalPrice += foodTotalPrice
 
@@ -193,19 +197,43 @@ module.exports.add_foods_into_order = (req, res) => {
         };
     });
 
-    if(error) {
+    if (error) {
         return res.json({ code: 1, message: 'FoodItem is not in the correct format' })
     }
 
-    Order.findById(orderId)
+    const checkFoodStatus = async () => {
+        for (const name of foodNames) {
+            try {
+                const food = await Food.findOne({ name });
+
+                if (!food) {
+                    return res.json({ code: 1, message: `Food '${name}' not found` });
+                }
+
+                if (!food.status) {
+                    return res.json({ code: 1, message: `Food '${name}' is not available` });
+                }
+            } catch (error) {
+                return res.json({ code: 1, message: "Added food to order failed" });
+            }
+        }
+        return null;
+    };
+
+    const errorResponse = await checkFoodStatus();
+    if (errorResponse) {
+        return errorResponse;
+    }
+    else {
+        Order.findById(orderId)
         .then(order => {
-            if(order) {
+            if (order) {
                 OrderDetail.insertMany(detailOrders)
                 order.total_price += totalPrice
                 order.status_completed = false
                 order.status_check = false
                 order.save()
-                
+
                 connections.sentOrderToChef()
 
                 return res.json({ code: 0, message: 'Added food to order successfully', order, listFood: listFoods })
@@ -217,4 +245,5 @@ module.exports.add_foods_into_order = (req, res) => {
         .catch(error => {
             res.json({ code: 1, message: 'Added food to order failed' })
         });
+    }
 }
